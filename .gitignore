@@ -1,0 +1,27 @@
+# generic
+*.pyc
+*.pyo
+*.swp
+*.swo
+.DS_Store
+*.orig
+
+# pylons
+development.ini*
+development.db
+sstore/*
+data/*
+pylons_data/*
+ckan/i18n/*/*/*.mo
+
+# other
+pip-requirements-local.txt
+migrate/*
+build/*
+tmp/*
+dist/*
+rdfstats.egg-info/*
+*.ini
+.noseids
+*~
+pyenv/

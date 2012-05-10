@@ -1,0 +1,11 @@
+<%inherit file="/default.html"/>
+<%def name="title()">About Class</%def>
+
+<h2>${c.rdf_class.uri}</h2>
+<h3>used by ${c.count}:</h3>
+<ul>
+% for rdf_class_entry in c.cs:
+<li>${h.link_to(rdf_class_entry.stat_result.rdfdoc.name,
+  url('rdfdoc', id=rdf_class_entry.stat_result.rdfdoc.id))}</li>  
+% endfor
+</ul>

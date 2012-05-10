@@ -1,0 +1,11 @@
+<%inherit file="/default.html"/>
+<%def name="title()">About Vocabulary</%def>
+
+<h2>${c.vocab.uri}</h2>
+<h3>used by ${c.count}:</h3>
+<ul>
+% for vs_entry in c.vs:
+<li>${h.link_to(vs_entry.stat_result.rdfdoc.name,
+  url('rdfdoc', id=vs_entry.stat_result.rdfdoc.id))}</li>  
+% endfor
+</ul>

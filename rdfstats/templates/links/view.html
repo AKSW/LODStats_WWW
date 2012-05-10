@@ -1,0 +1,11 @@
+<%inherit file="/default.html"/>
+<%def name="title()">About Linked Namespaces ${c.link.id}</%def>
+
+<h2>${c.link.code}</h2>
+<h3>used by ${c.count}:</h3>
+<ul>
+% for ls_entry in c.ls:
+<li>${h.link_to(ls_entry.stat_result.rdfdoc.name,
+  url('rdfdoc', id=ls_entry.stat_result.rdfdoc.id))}</li>
+% endfor
+</ul>

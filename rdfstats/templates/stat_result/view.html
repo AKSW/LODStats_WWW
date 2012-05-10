@@ -1,0 +1,11 @@
+<%inherit file="/default.html"/>
+<%def name="title()">About Stats Dings</%def>
+
+<%namespace name="stat_result" file="stat_result.html"/>
+
+<h2>Results for ${h.link_to(c.stats.rdfdoc.name,
+  url('rdfdoc', id=c.stats.rdfdoc.id))}</h2>
+% if c.stats:
+  ${stat_result.stat_result(c.stats)}
+% endif
+

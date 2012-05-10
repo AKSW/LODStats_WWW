@@ -1,0 +1,25 @@
+<%inherit file="/default.html"/>
+<%def name="title()">About ${c.rdfdoc.uri}</%def>
+
+<%namespace name="stat_result" file="../stat_result/stat_result.html"/>
+
+<h2><a href="${c.ckan_base}dataset/${c.rdfdoc.name}">${c.rdfdoc.name}</a></h2>
+<ul>
+  <li><a href="${c.rdfdoc.uri}">${c.rdfdoc.uri}</a></li>
+  <li>Last updated: ${c.rdfdoc.last_updated}</li>
+  <li>Is being worked on: ${c.rdfdoc.worked_on}</li>
+  <li>File last modified: ${c.rdfdoc.file_last_modified}
+</ul>
+
+% if c.rdfdoc.current_stats:
+  ${stat_result.stat_result(c.rdfdoc.current_stats, c.rdfdoc.worked_on)}
+% endif
+
+% if len(c.oldstats) > 0:
+<h3>Older statistics:</h3>
+<ul>
+  % for stat in c.oldstats:
+  <li>${h.link_to(stat.last_updated, url('stat_result', id=stat.id))}</li>
+  % endfor
+</ul>
+% endif

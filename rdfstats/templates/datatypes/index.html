@@ -1,0 +1,9 @@
+<%inherit file="/default.html"/>
+<%def name="title()">${c.count} Datatypes</%def>
+
+<%namespace name="table" file="../stat_result/count_dataset_table.html"/>
+
+<h2>${c.count} datatypes</h2>
+${table.count_dataset_table(c.datatypes_page, 'datatype')}
+
+${c.datatypes_page.pager()}

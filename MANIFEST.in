@@ -1,0 +1,3 @@
+include rdfstats/config/deployment.ini_tmpl
+recursive-include rdfstats/public *
+recursive-include rdfstats/templates *

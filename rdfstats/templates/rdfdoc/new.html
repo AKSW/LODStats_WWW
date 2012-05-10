@@ -1,0 +1,7 @@
+<%inherit file="/default.html"/>
+<%def name="title()">new dataset</%def>
+
+${h.form(url('rdfdocs'))}
+${c.rdfdoc_f.render()|n}
+${h.submit('submit', 'Submit')}
+${h.end_form()}

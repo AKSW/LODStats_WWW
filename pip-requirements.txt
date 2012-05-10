@@ -1,0 +1,7 @@
+lodstats
+ipython==0.10
+pylons
+sqlalchemy==0.6.8
+formalchemy
+ckanclient
+

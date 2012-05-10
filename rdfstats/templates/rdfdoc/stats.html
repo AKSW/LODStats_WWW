@@ -1,0 +1,115 @@
+<%inherit file="/default.html"/>
+<%def name="title()">${c.rdfdoc_count} datasets</%def>
+
+<%namespace name="stat_result" file="../stat_result/stat_result.html"/>
+
+% if c.no_of_rdfdocs_with_triples > 0:
+<h2>Basic Statistics</h2>
+<table>
+  <th>Criterion</th><th>Average</th><th>Min</th><th>Max</th><th>Median</th>
+  <tr><td>Triples</td>${stat_result.avgminmax(c.triples)}</tr>
+  <tr><td>Entities</td>${stat_result.avgminmax(c.entities)}</tr>
+  <tr><td>Literals</td>${stat_result.avgminmax(c.literals)}</tr>
+  <tr><td>Blanks</td>${stat_result.avgminmax(c.blanks)}</tr>
+  <tr><td>Blanks as subject</td>${stat_result.avgminmax(c.blanks_as_subject)}</tr>
+  <tr><td>Blanks as object</td>${stat_result.avgminmax(c.blanks_as_object)}</tr>
+  <tr><td>Subclasses</td>${stat_result.avgminmax(c.subclasses)}</tr>
+  <tr><td>Typed subjects</td>${stat_result.avgminmax(c.typed_subjects)}</tr>
+  <tr><td>Labeled subjects</td>${stat_result.avgminmax(c.labeled_subjects)}</tr>
+  <tr><td>Average properties per entity</td>${stat_result.avgminmax(c.properties_per_entity)}</tr>
+  <tr><td>Average string length typed</td>${stat_result.avgminmax(c.string_length_typed)}</tr>
+  <tr><td>Average string length untyped</td>${stat_result.avgminmax(c.string_length_untyped)}</tr>
+  <tr><td>Average class hierarchy depth</td>${stat_result.avgminmax(c.class_hierarchy_depth)}</tr>
+  <tr><td>Links</td>${stat_result.avgminmax(c.links)}</tr>
+  <tr><td>Average property hierarchy depth</td>${stat_result.avgminmax(c.property_hierarchy_depth)}</tr>
+</table>
+
+<h2>Overall numbers</h2>
+<ul>
+  <li>Classes: ${c.rdf_classes}</li>
+  <li>Properties: ${c.properties}</li>
+  <li>Vocabularies: ${c.vocabs}</li>
+  <li>Linked Namespaces: ${c.link_count}</li>
+  <li>Datatypes: ${c.datatypes}</li>
+  <li>Languages: ${c.languages}</li>
+</ul>
+
+<h2>Top 5 by usage in datasets:</h2>
+<h3>Vocabularies:</h3>
+<ul>
+  % for (v_uri, v_id, v_count) in c.v_usage:
+  <li>${h.link_to(v_uri, url('vocabulary', id=v_id))} : ${v_count}</li>
+  % endfor
+</ul>
+<h3>Classes:</h3>
+<ul>
+  % for (c_uri, c_id, c_count) in c.c_usage:
+  <li>${h.link_to(c_uri, url('rdf_class', id=c_id))} : ${c_count}</li>
+  % endfor
+</ul>
+<h3>Properties:</h3>
+<ul>
+  % for (p_uri, p_id, p_count) in c.p_usage:
+  <li>${h.link_to(p_uri, url('property', id=p_id))} : ${p_count}</li>
+  % endfor
+</ul>
+<h3>Datatypes:</h3>
+<ul>
+  % for (p_uri, d_id, p_count) in c.t_usage:
+  <li>${h.link_to(p_uri, url('datatype', id=d_id))} : ${p_count}</li>
+  % endfor
+</ul>
+<h3>Languages:</h3>
+<ul>
+  % for (code, l_id, count) in c.l_usage:
+  <li>${h.link_to(code, url('language', id=l_id))} : ${count}</li>
+  % endfor
+</ul>
+<h3>Links:</h3>
+<ul>
+  % for (code, l_id, count) in c.link_usage:
+  <li>${h.link_to(code, url('link', id=l_id))} : ${count}</li>
+  % endfor
+</ul>
+
+<h2>Top 5 overall:</h2>
+<h3>Vocabularies:</h3>
+<ul>
+  % for (v_uri, v_id, v_count) in c.v_sum:
+  <li>${h.link_to(v_uri, url('vocabulary', id=v_id))} : ${v_count}</li>
+  % endfor
+</ul>
+<h3>Classes:</h3>
+<ul>
+  % for (c_uri, c_id, c_count) in c.c_sum:
+  <li>${h.link_to(c_uri, url('rdf_class', id=c_id))} : ${c_count}</li>
+  % endfor
+</ul>
+<h3>Properties:</h3>
+<ul>
+  % for (p_uri, p_id, p_count) in c.p_sum:
+  <li>${h.link_to(p_uri, url('property', id=p_id))} : ${p_count}</li>
+  % endfor
+</ul>
+<h3>Datatypes:</h3>
+<ul>
+  % for (p_uri, d_id, p_count) in c.t_sum:
+  <li>${h.link_to(p_uri, url('datatype', id=d_id))} : ${p_count}</li>
+  % endfor
+</ul>
+<h3>Languages:</h3>
+<ul>
+  % for (code, l_id, count) in c.l_sum:
+  <li>${h.link_to(code, url('language', id=l_id))} : ${count}</li>
+  % endfor
+</ul>
+<h3>Links:</h3>
+<ul>
+  % for (code, l_id, count) in c.link_sum:
+  <li>${h.link_to(code, url('link', id=l_id))} : ${count}</li>
+  % endfor
+</ul>
+% else:
+<h2>Sorry, no results are available yet</h2>
+Dear admin, please consider restarting the server to clean the result cache.
+% endif

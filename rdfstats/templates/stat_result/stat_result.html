@@ -1,0 +1,166 @@
+<%def name="stat_result(stat_result, worked_on=False)">
+
+<ul>
+% if stat_result.errors:
+  <li>Error: ${stat_result.errors}</li>
+%endif
+% if stat_result.warnings > 0:
+  <li>Warnings: ${stat_result.warnings}, last warning: ${stat_result.last_warning}</li>
+%endif
+<li>Results last updated: ${stat_result.last_updated}</li>
+% if not worked_on and stat_result.errors is None:
+  % if stat_result.rdfdoc.format != 'sparql':
+    <li>Bytes: 
+    % if stat_result.bytes_download > 0:
+      ${h.format_data_size(stat_result.bytes_download, 'B', binary=True)}
+    % else:
+      0
+    % endif
+    % if stat_result.bytes > 0:
+      - ${h.format_data_size(stat_result.bytes, 'B', binary=True)} decompressed
+    % endif
+    </li>
+  % endif
+</ul>
+  <h3>Basic Statistics</h3>
+  <table>
+    <th>Criterion</th><th>Value</th>
+    <tr><td>Triples</td><td>${stat_result.triples}</td></tr>
+    <tr><td>Entities</td><td>${stat_result.entities}</td></tr>
+    <tr><td>Literals</td><td>${stat_result.literals}</td></tr>
+    <tr id="classes_toggle"><td>Classes${' (toggle details)' if len(stat_result.classes) > 0 else ''}</td><td>${len(stat_result.classes)}</td></tr>
+    % for rdf_class in stat_result.classes:
+    <tr class="classes_row" style="display: none">
+      <td>${h.link_to(rdf_class.uri, url('rdf_class', id=rdf_class.id))}</td>
+      <td></td>
+    </tr>
+    % endfor
+    <tr id="classes_defined_toggle">
+      <td>Defined classes${' (toggle details)' if len(stat_result.defined_classes) > 0 else ''}</td>
+      <td>${len(stat_result.defined_classes)}</td>
+    </tr>
+    % for rdf_class in stat_result.defined_classes:
+    <tr class="classes_defined_row" style="display: none">
+      <td>${h.link_to(rdf_class.uri, url('rdf_class', id=rdf_class.id))}</td>
+      <td></td>
+    </tr>
+    % endfor
+    <tr id="vocabularies_toggle">
+      <td>Vocabularies${' (toggle details)' if len(stat_result.vocabs) > 0 else ''}</td>
+      <td>${len(stat_result.vocabs)}</td>
+    </tr>
+    % for vocab in stat_result.vocabs:
+    <tr class="vocabularies_row" style="display: none">
+      <td>${h.link_to(vocab.uri, url('vocabulary', id=vocab.id))}</td>
+      <td></td>
+    </tr>
+    % endfor
+    <tr id="properties_toggle">
+      <td>Properties${' (toggle details)' if len(stat_result.properties) > 0 else ''}</td>
+      <td>${len(stat_result.properties)}</td>
+    </tr>
+    % for prop in stat_result.properties:
+    <tr class="properties_row" style="display: none">
+      <td>${h.link_to(prop.uri, url('property', id=prop.id))}</td>
+      <td></td>
+    </tr>
+    % endfor
+    <tr id="datatypes_toggle">
+      <td>Datatypes${' (toggle details)' if len(stat_result.rdf_datatypes) > 0 else ''}</td>
+      <td>${len(stat_result.rdf_datatypes)}</td>
+    </tr>
+    % for rdf_datatype in stat_result.rdf_datatypes:
+    <tr class="datatypes_row" style="display: none">
+      <td>${h.link_to(rdf_datatype.uri, url('datatype', id=rdf_datatype.id))}</td>
+      <td></td>
+    </tr>
+    % endfor
+    <tr id="languages_toggle">
+      <td>Languages${' (toggle details)' if len(stat_result.languages) > 0 else ''}</td>
+      <td>${len(stat_result.languages)}</td>
+    </tr>
+    % for lang in stat_result.languages:
+    <tr class="languages_row" style="display: none">
+      <td>${h.link_to(lang.code, url('language', id=lang.id))}</td>
+      <td></td>
+    </tr>
+    % endfor
+    <tr id="links_toggle">
+      <td>Linked namespaces${' (toggle details)' if len(stat_result.links_all) > 0 else ''}</td>
+      <td>${len(stat_result.links_all)}</td>
+    </tr>
+    % for link in stat_result.links_all[0:250]:
+    <tr class="links_row" style="display: none">
+      <td>${h.link_to(link.code, url('link', id=link.id))}</td>
+      <td></td>
+    </tr>
+    % endfor
+    <tr><td>Blanks</td><td>${stat_result.blanks}</td></tr>
+    <tr><td>Blanks as subject</td><td>${stat_result.blanks_as_subject}</td></tr>
+    <tr><td>Blanks as object</td><td>${stat_result.blanks_as_object}</td></tr>
+    <tr><td>Subclasses</td><td>${stat_result.subclasses}</td></tr>
+    <tr><td>Typed_subjects</td><td>${stat_result.typed_subjects}</td></tr>
+    <tr><td>Labeled subjects</td><td>${stat_result.labeled_subjects}</td></tr>
+    <tr><td>Class hierarchy depth</td><td>${stat_result.class_hierarchy_depth}</td></tr>
+    <tr><td>Property hierarchy depth</td><td>${stat_result.property_hierarchy_depth}</td></tr>
+    <tr><td>Properties per entity</td><td>${stat_result.properties_per_entity}</td></tr>
+    <tr><td>String length (typed)</td><td>${stat_result.string_length_typed}</td></tr>
+    <tr><td>String length (untyped)</td><td>${stat_result.string_length_untyped}</td></tr>
+    <tr><td>Links</td><td>${stat_result.links}</td></tr>
+  </table>
+  <h3><span id="void">VoID: (click to toggle</span>, ${h.link_to('download', url('stat_result', id=stat_result.id)+'.void')})</h3>
+  <pre id="void_pre" style="display: none">${stat_result.void}</pre>
+% else:
+  % if stat_result.rdfdoc.format != 'sparql':
+  <li>Bytes downloaded:
+    % if stat_result.bytes_download > 0:
+      ${h.format_data_size(stat_result.bytes_download, 'B', binary=True)}
+    % else:
+      0
+    % endif
+    % if stat_result.content_length > 0:
+      of ${h.format_data_size(stat_result.content_length, 'B', binary=True)}
+    % endif
+    % if stat_result.bytes > 0:
+      - ${h.format_data_size(stat_result.bytes, 'B', binary=True)} decompressed
+    % endif
+  </li>
+  % endif
+  <li>Triples done: ${stat_result.triples_done}</li>
+  </ul>
+% endif
+<script>
+  $("#void").click(function () {
+      $("#void_pre").toggle("slow");
+    });
+    $("#classes_toggle").click(function () {
+        $(".classes_row").toggle();
+    });
+    $("#classes_defined_toggle").click(function () {
+        $(".classes_defined_row").toggle();
+    });
+    $("#vocabularies_toggle").click(function () {
+        $(".vocabularies_row").toggle();
+    });
+    $("#properties_toggle").click(function () {
+        $(".properties_row").toggle();
+    });
+    $("#datatypes_toggle").click(function () {
+        $(".datatypes_row").toggle();
+    });
+    $("#languages_toggle").click(function () {
+        $(".languages_row").toggle();
+    });
+    $("#links_toggle").click(function () {
+        $(".links_row").toggle();
+    });
+</script>
+</%def>
+
+<%def name="avgminmax(v_list)">
+  <td>${h.format_number(round(v_list[0], 2))}</td>
+  <td>${h.format_number(round(v_list[1], 2)) if type(v_list[1])==float else h.format_number(v_list[1])}</td>
+  <td>${h.format_number(round(v_list[2], 2)) if type(v_list[2])==float else h.format_number(v_list[2])}</td>
+  <td>${h.format_number(round(v_list[3], 2)) if type(v_list[3])==float else h.format_number(v_list[3])}</td>
+</%def>
+

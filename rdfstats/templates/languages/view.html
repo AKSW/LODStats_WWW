@@ -1,0 +1,11 @@
+<%inherit file="/default.html"/>
+<%def name="title()">About Dataype</%def>
+
+<h2>${c.language.code}</h2>
+<h3>used by ${c.count}:</h3>
+<ul>
+% for l_entry in c.ls:
+<li>${h.link_to(l_entry.stat_result.rdfdoc.name,
+  url('rdfdoc', id=l_entry.stat_result.rdfdoc.id))}</li>
+% endfor
+</ul>

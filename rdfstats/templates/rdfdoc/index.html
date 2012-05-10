@@ -1,0 +1,96 @@
+<%inherit file="/default.html"/>
+<%def name="title()">${c.rdfdoc_count} datasets</%def>
+
+<div id="rdfdocnav">
+  <div id="rdfdocnavstatus">
+${h.link_to('Everything', url('rdfdocs'))}, ${h.link_to('Dumps', url('rdfdocs', dumps=1))},
+   ${h.link_to('SPARQL', url('rdfdocs', sparql=1))}, ${h.link_to('Errors', url('rdfdocs', errors=1))},
+   ${h.link_to('Valid', url('rdfdocs', valid=1))}
+  </div>
+
+   <div id="rdfdocnavsearch">
+   <form action="${url('rdfdocs')}" method="get" id="rdfdocsnavearchform">
+     <input type="text" name="search" id="rdfdocsearchinput" value="${c.search}" placeholder="dataset name" />
+     <input type="submit" name="" value="Search" />
+   </form>
+   </div>
+   <div class="clear"></div>
+</div>
+
+<div class="pager">
+% if c.rdfdoc_count > 0:
+${c.rdfdocs_page.pager()}
+</div>
+<table id="rdfdoctable" border="1">
+  ${h.th_sortable(c.sort_order, "name", "Name", c.query_string+"sort=name", class_if_not_sort_column='nosortheader')}
+  ${h.th_sortable(c.sort_order, "triples", "Triples", c.query_string+"sort=triples", class_if_not_sort_column='nosortheader')}
+  ${h.th_sortable(c.sort_order, "warnings", "Warnings", c.query_string+"sort=warnings", class_if_not_sort_column='nosortheader')}
+  ${h.th_sortable(c.sort_order, "format", "Format", c.query_string+"sort=format", class_if_not_sort_column='nosortheader')}
+  ${h.th_sortable(c.sort_order, "issue", "Issue", c.query_string+"sort=issue", class_if_not_sort_column='nosortheader')}
+  ${h.th_sortable(c.sort_order, "update", "Last Update", c.query_string+"sort=update", class_if_not_sort_column='nosortheader')}
+  ##<th>Triples</th><th>Warnings</th><th>Format</th><th>Issue</th><th>Last Update</th>
+% for rdfdoc in c.rdfdocs_page:
+  % if rdfdoc.format == "sparql" and rdfdoc.current_stats and rdfdoc.current_stats.errors:
+  <tr class="rdfdocsparqlerror" border="1">
+  % elif rdfdoc.format == "sparql":
+  <tr class="rdfdocsofterror" border="1">
+  % elif rdfdoc.current_stats and rdfdoc.current_stats.errors:
+  <tr class="rdfdocerror" border="1">
+  % else:
+  <tr class="rdfdoc" border="1">
+  % endif
+    <td>
+    % if rdfdoc.name is not None:
+      ${h.link_to(rdfdoc.name, url('rdfdoc', id=rdfdoc.id), class_='rdfdoctablelink')}
+    % else:
+      ${h.link_to(rdfdoc.uri, url('rdfdoc', id=rdfdoc.id), class_='rdfdoctablelink')}
+    % endif
+    </td>
+    <td class="triples">
+    % if rdfdoc.current_stats and rdfdoc.current_stats.triples > 0:
+      ${h.format_number(rdfdoc.current_stats.triples)}
+    % endif
+    </td>
+    <td class="warnings">
+    % if rdfdoc.current_stats and rdfdoc.current_stats.warnings > 0:
+      ${h.format_number(rdfdoc.current_stats.warnings)}
+    % endif
+    </td>
+    <td class="format">
+    % if rdfdoc.format is not None:
+      ${rdfdoc.format}
+    % endif
+    </td>
+    <td class="statusmessages">
+    %if rdfdoc.worked_on:
+      is being processed
+      % if rdfdoc.current_stats and rdfdoc.current_stats.triples_done > 0:
+        - ${rdfdoc.current_stats.triples_done} triples done
+      % elif rdfdoc.current_stats and rdfdoc.current_stats.bytes_download > 0 and rdfdoc.current_stats.content_length is not None:
+        - ${h.format_data_size(rdfdoc.current_stats.bytes_download, 'B', binary=True)}
+        /${h.format_data_size(rdfdoc.current_stats.content_length, 'B', binary=True)} loaded,
+         ${h.format_data_size(rdfdoc.current_stats.bytes, 'B', binary=True)} decompressed
+      % elif rdfdoc.current_stats and rdfdoc.current_stats.bytes_download > 0:
+        - ${h.format_data_size(rdfdoc.current_stats.bytes_download, 'B', binary=True)},
+        ${h.format_data_size(rdfdoc.current_stats.bytes, 'B', binary=True)} decompressed
+      %endif
+      - PID ${rdfdoc.worker.pid}
+    %elif rdfdoc.current_stats and rdfdoc.current_stats.errors:
+      ${h.truncate(rdfdoc.current_stats.errors, 150)}
+    % elif rdfdoc.current_stats and rdfdoc.current_stats.warnings > 0:
+      last warning: ${h.truncate(rdfdoc.current_stats.last_warning, 150)}
+    % endif
+    </td>
+    <td class="updatetime">
+    % if rdfdoc.current_stats and rdfdoc.last_updated:
+      ${h.distance_of_time_in_words(rdfdoc.last_updated, granularity='hour')} ago
+    % endif
+    </td>
+  </tr>
+% endfor
+</table>
+${c.rdfdocs_page.pager()}
+% else:
+No Datasets.
+% endif
+

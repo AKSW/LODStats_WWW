@@ -1,0 +1,3 @@
+% for rdfdoc in c.rdfdocs:
+${rdfdoc.name} ${rdfdoc.uri}
+% endfor

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta charset="utf-8">
+	<title>LODStats - ${self.title()}</title>
+	${h.stylesheet_link(url('/css.css'))}
+	${h.javascript_link(url('/jquery.js'))}
+</head>
+
+<body>
+  <div class="container">
+    <div id="lodstatslogo">
+      <a href="/">
+        <img id="lodstatslogoimg" src="/lodstats_small.png"/>
+        <h1 id="lodstatslogotext">LODStats</h1>
+      </a>
+    </div>
+    <div id="linklogos">
+      <a href="http://lod2.eu/"><img class="linklogo" src="/logo-lod2_small.png"/></a>
+      <a href="http://aksw.org/"><img class="linklogo" src="/logo-aksw_small.png"/></a>
+    </div>
+    <div class="navigation-container">
+      <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li>${h.link_to("Statistics", url(controller='homepage', action='stats'))}</li>
+        <li>${h.link_to("Datasets", url('rdfdocs'))}</li>
+        <li>${h.link_to("Classes", url(controller='rdf_classes', action='index'))}</li>
+        <li>${h.link_to("Properties", url(controller='properties', action='index'))}</li>
+        <li>${h.link_to("Vocabularies", url(controller='vocabularies', action='index'))}</li>
+        <li>${h.link_to("Links", url('links'))}</li>
+        <li>${h.link_to("Types", url(controller='datatypes', action='index'))}</li>
+        <li>${h.link_to("Languages", url(controller='languages', action='index'))}</li>
+        <li><a href="http://aksw.org/projects/LODStats">About</a></li>
+        ## <li><a href="#">${h.link_to("New", url('new_rdfdoc'))}</a></li>
+      </ul>
+      <%doc>
+      <form action="${url('rdfdocs')}" method="post" id="quicksubmit">
+        <input type="text" name="RDFDoc--uri" id="RDFDoc--uri" value="http://URL" class="inputfield url"/>
+        <input type="submit" name="submit" value="Quick submit" />
+      </form>
+      </%doc>
+    </div>
+<div class="content">
+  ${self.body()}
+</div>
+</body>
+</html>

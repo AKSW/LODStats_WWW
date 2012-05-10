@@ -1,0 +1,9 @@
+<%inherit file="/default.html"/>
+<%def name="title()">${c.count} Properties</%def>
+
+<%namespace name="table" file="../stat_result/count_dataset_table.html"/>
+
+<h2>${c.count} properties</h2>
+${table.count_dataset_table(c.rdf_properties_page, 'property')}
+
+${c.rdf_properties_page.pager()}

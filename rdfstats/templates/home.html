@@ -1,0 +1,35 @@
+<%inherit file="/default.html"/>
+<%def name="title()">${c.rdfdoc_count} datasets</%def>
+
+<h2>Cumulative numbers</h2>
+<p>${h.link_to("%i datasets" % c.rdfdoc_count, url('rdfdocs'))}</p>
+<p>
+  ${h.format_number(c.triples_dump+c.triples_sparql)} triples from
+    ${h.link_to("%i datasets" % c.no_of_rdfdocs_with_triples, url('rdfdocs', valid=1))}
+  (${h.format_number(c.triples_dump)} triples from
+    ${h.link_to("%i dumps" % (c.dump_packages-c.error_packages_dump), url('rdfdocs', dumps=1, valid=1))},
+    ${h.format_number(c.triples_sparql)} from
+    ${h.link_to("%i datasets via SPARQL" % (c.sparql_packages-c.error_packages_sparql), url('rdfdocs', sparql=1, valid=1))})
+</p>
+<p>Problems with
+    ${h.link_to("%i datasets" % c.problem_packages, url('rdfdocs', errors=1))}
+  % if c.touched_packages > 0:
+    (${round(h.percent_of(c.problem_packages, c.touched_packages), 1)}%):
+  % endif
+  ${h.link_to("%i dumps having errors" % c.error_packages_dump, url('rdfdocs', errors=1, dumps=1))},
+  ${h.link_to("%i SPARQL endpoints with errors" % c.error_packages_sparql, url('rdfdocs', errors=1, sparql=1))}</p>
+
+<h2>Most recently updated</h2>
+<ul>
+% for rdfdoc in c.recent_updates:
+  <li>${h.link_to(rdfdoc.name, url('rdfdoc', id=rdfdoc.id))},
+  ${h.distance_of_time_in_words(rdfdoc.last_updated, granularity='hour')} ago</li>
+% endfor
+</ul>
+<h2>Most recent updates with errors</h2>
+<ul>
+% for rdfdoc in c.recent_updates_errors:
+  <li>${h.link_to(rdfdoc.name, url('rdfdoc', id=rdfdoc.id))},
+  ${h.distance_of_time_in_words(rdfdoc.last_updated, granularity='hour')} ago</li>
+% endfor
+</ul>

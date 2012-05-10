@@ -1,0 +1,9 @@
+<%inherit file="/default.html"/>
+<%def name="title()">${c.count} Vocabularies</%def>
+
+<%namespace name="table" file="../stat_result/count_dataset_table.html"/>
+
+<h2>${c.count} vocabularies</h2>
+${table.count_dataset_table(c.vocabs_page, 'vocabulary')}
+
+${c.vocabs_page.pager()}

@@ -1,0 +1,11 @@
+<%inherit file="/default.html"/>
+<%def name="title()">About Dataype</%def>
+
+<h2>${c.datatype.uri}</h2>
+<h3>used by ${c.count}:</h3>
+<ul>
+% for ds_entry in c.ds:
+<li>${h.link_to(ds_entry.stat_result.rdfdoc.name,
+  url('rdfdoc', id=ds_entry.stat_result.rdfdoc.id))}</li>
+% endfor
+</ul>

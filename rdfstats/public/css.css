@@ -1,0 +1,100 @@
+@charset "utf-8";
+
+/*reset*/
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outline:0}ins{text-decoration:none}
+
+/*structure*/
+body { background: #333; color: #333; font-family: Arial; font-size:14px; }
+.navigation-container { background: #eee; border: 1px solid #ddd; position:absolute; top: 80px;left: 80px; padding: 20px; margin: 0 80px 0 0; }
+#nav li { float: left; padding: 5px 15px 5px 10px; border-right: 1px solid #ccc; list-style: none; }
+#nav li a { color: #0a7f0f; text-decoration: none; font-weight: bold; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+#nav li.last { border-right: none; }
+.content { margin: 120px 20px;background: #fdfdfd; border: 1px solid #dfdfdf; padding: 40px; }
+.content h1 { font-size: 20px; color: #888; border-bottom: 1px solid #ccc; margin: 50px 0 10px 0; }
+.content a { text-decoration: none; font-size: 15px; font-weight: bold; color: #0a7f0f; }
+.content p { margin-left: 10px; }
+.content ul { margin-left: 10px; }
+.navigation-container ul { float: left; }
+
+/*form*/
+form#quicksubmit { float:left; }
+form#quicksubmit input.inputfield { width: 200px; height: 20px; border: 1px solid #ccc; margin-left: 20px; }
+form#quicksubmit input[type="submit"] {margin: 0;}
+form#rdfdocsnavearchform { float: left;}
+form#rdfdocsnavearchform input[type="text"] { box-shadow: inset 0 1px 3px #ccc; width: 200px; height: 20px; border: 1px solid #ccc; margin-left: 20px; padding: 5px 10px ; }
+form#rdfdocsnavearchform input[type="submit"] {margin: 0; border: 1px solid #fff; padding: 7px 20px; background: #fff; box-shadow: 0 0 5px #aaa; }
+
+form#rdfdocsnavearchform input[type="submit"]:hover { cursor: pointer; box-shadow: 0 0 1px #aaa; background: #333; color: #fff;}
+#rdfdocnav { position: absolute; border: 1px solid #eee; background: #fafafa; }
+#rdfdocnavstatus { float:left; margin: 18px 10px; }
+#rdfdocnavstatus a { font-size: 20px; }
+
+#rdfdocnavsearch { float:left; margin: 10px; }
+.pager { margin-top: 100px; }
+
+/*clear*/
+.clear { clear:both; }
+#linklogos { position: absolute; top: 20px; right:20px; }
+.linklogo { position: relative; height:36px; }
+/*text*/
+#lodstatslogo { position: absolute; top: 20px; left:20px; height: 80px; z-index: 1; }
+#lodstatslogotext { font-size: 36px; color: #fff; display: inline;}
+#lodstatslogoimg { position: relative; height: 80px; vertical-align: middle; }
+h2 {font-size: 18px; color: #888; border-bottom: 1px solid #ccc; margin: 50px 0 10px 0; }
+h3 { margin: 15px 5px; color: #333; }
+p { line-height: 1.2; margin:  10px 0; }
+ul li { list-style: square; margin-left: 16px; margin-bottom: 10px; }
+
+#rdfdoctable {border-collapse: collapse; width: 100%; margin-top: 30px;}
+#rdfdoctable a { color: #333; }
+#rdfdoctable th a { color: #777; font-size: 14px; }
+#countdatasettable th {text-align: center; width: auto;}
+#countdatasettable td {width: auto;}
+.tablecount {text-align: right; max-width: 15%; padding-right: 0px}
+.tabledatasets {text-align: right; max-width: 15%; padding-right: 0px}
+th {border:thin solid black; font-size: 90%; width: auto; }
+td {border:thin solid black; font-size: 85%; width: auto; }
+td:last-child { white-space: nowrap; }
+.rdfdocerror {background-color: #F66;}
+.rdfdocsofterror {background-color: #FF6; }
+.rdfdocsparqlerror {background-color: #FC6;}
+.triples {text-align: right; width: 10%}
+.warnings {text-align: right; width: 20px;}
+.format {text-align: center;}
+label {
+    float: left;
+    text-align: right;
+    margin-right: 1em;
+    width: 10em;
+}
+
+form div {
+    margin: 0.5em;
+    float: left;
+    width: 100%;
+}
+
+form input[type="submit"] {
+    margin-top: 1em;
+    margin-left: 9em;
+}
+
+.field_error {
+    color: red;
+}
+
+/*navigation*/
+.pager_link { border: 1px solid #ccc; padding: 10px; }
+a.pager_link { color: #999; }
+a.pager_link:hover { color: #0a7f0f; font-size: 16px; text-decoration: underline; background-color: #fff; }
+.pager_curpage { padding: 20px; font-size: 24px; font-weight: bold; color: #555; }
+.pager_dotdot { letter-spacing: 2px; }
+
+table { font-size: 16px; width: 900px; margin-bottom: 20px; }
+table th { font-size: 12px; border: 0; text-align: left; padding: 0; margin:0; }
+table td { padding-right: 40px;line-height: 1.5; border-left: 0; border-right: 0; border-top: 0; border-bottom: 1px dotted #0a7f0f; font-size: 12px; color: #333; letter-spacing: 1px;}
+
+th.sort { font-size: 12px; border: 1px solid #ddd; background-color: #eee; text-align: center; color: #000; padding: 5px 5px 5px 10px; letter-spacing: 4px; border-bottom: none; }
+.nosortheader a { font-size: 12px; margin-right: 10px; margin-left: 10px; text-decoration: underline; }
+th.nosortheader a { margin-left: 0; display:block; margin-bottom: 5px; border-bottom: 1px solid #ccc;}
+a.rdfdoctablelink { font-size: 14px; text-decoration: underline; }
