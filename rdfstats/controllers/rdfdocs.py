@@ -135,9 +135,16 @@ class RdfdocsController(BaseController):
             response.content_type = 'application/json'
             json_rdfdoc = {}
             json_rdfdoc['name'] = c.rdfdoc.name
+            json_rdfdoc['resource_uri'] = c.rdfdoc.uri
+            json_rdfdoc['source'] = "http://stats.lod2.eu/rdfdocs/%s" % c.rdfdoc.name
+            json_rdfdoc['quality_score'] = 3
+            json_rdfdoc['quality_details'] = 3
+            json_rdfdoc['catagory'] = 'lod2-stats'
             json_rdfdoc['format'] = c.rdfdoc.format
             if c.rdfdoc.current_stats is not None:
-                json_rdfdoc['current_stats'] = c.rdfdoc.current_stats.json_dict()
+                json_rdfdoc['statistics'] = c.rdfdoc.current_stats.json_dict()
+            else:
+                json_rdfdoc['statistics'] = None
             return json.dumps(json_rdfdoc)
         return render('/rdfdoc/view.html')
 
