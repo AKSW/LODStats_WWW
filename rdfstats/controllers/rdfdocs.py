@@ -139,7 +139,7 @@ class RdfdocsController(BaseController):
             json_rdfdoc['source'] = "http://stats.lod2.eu/rdfdocs/%s" % c.rdfdoc.name
             json_rdfdoc['quality_score'] = 3
             json_rdfdoc['quality_details'] = 3
-            json_rdfdoc['catagory'] = 'lod2-stats'
+            json_rdfdoc['category'] = 'lod2-stats'
             json_rdfdoc['format'] = c.rdfdoc.format
             if c.rdfdoc.current_stats is not None:
                 json_rdfdoc['statistics'] = c.rdfdoc.current_stats.json_dict()
