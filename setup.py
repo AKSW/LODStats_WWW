@@ -37,5 +37,9 @@ setup(
     [paste.paster_command]
     rdfstats_runner = rdfstats.commands.rdfstats_runner:DoStats
     rdf_ckan_update = rdfstats.commands.rdf_ckan_update:DoUpdate
+    admin = rdfstats.commands.admin:DoAdmin
+    clean_workers = rdfstats.commands.clean_workers:DoCleanWorkers
+    load_from_pickled = rdfstats.commands.load_from_pickled:DoLoadFromPickled
+    db_manipulation = rdfstats.commands.db_manipulation:DoDB
     """,
 )
