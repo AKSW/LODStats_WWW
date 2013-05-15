@@ -96,7 +96,7 @@ class UpdateFromFile(Command):
                 rdfdoc.name = package['package_name']
                         
             rdfdoc.format = package['format']
-            rdfdoc.uri = package['rdf_url']
+            rdfdoc.uri = package['uri']
 
             if rdfdoc.format is not None:
                 Session.commit()
