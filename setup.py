@@ -41,5 +41,6 @@ setup(
     clean_workers = rdfstats.commands.clean_workers:DoCleanWorkers
     load_from_pickled = rdfstats.commands.load_from_pickled:DoLoadFromPickled
     db_manipulation = rdfstats.commands.db_manipulation:DoDB
+    update_from_file = rdfstats.commands.update_from_file:UpdateFromFile
     """,
 )
