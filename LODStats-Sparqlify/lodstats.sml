@@ -24,10 +24,10 @@ Create View Datasets As
 
 Create View StatResults As
   Construct {
-    ?s
+    ?triples
       a qb:Observation ;
       qb:dataSet ls-qb:LODStats ;
-      ls-qb:statisticalCriterion ls-cr:usedClasses ;
+      ls-qb:statisticalCriterion ls-cr:triples ;
       ls-qb:timeOfMeasure ?t ;
       ls-qb:value ?v ;
       ls-qb:unit "total amount" ;
@@ -35,12 +35,45 @@ Create View StatResults As
      
   }
   With
-    ?s = uri(ls-qb:, ?hash)
-    ?t = typedLiteral(?last_updated, xsd:dateTime)
-    ?v = typedLiteral(?triples, xsd:integer)
+    ?triples = uri(ls-qb:, ?triples_hash)
+    ?entities = uri(ls-qb:, ?entities_hash)
+    ?literals = uri(ls-qb:, ?literals_hash)
+    ?blanksAsSubject = uri(ls-qb:, ?blanksAsSubject_hash)
+    ?blanksAsObject = uri(ls-qb:, ?blanksAsObject_hash)
+    ?subclasses = uri(ls-qb:, ?subclasses_hash)
+    ?typedSubjects = uri(ls-qb:, ?typedSubjects_hash)
+    ?labeledSubjects = uri(ls-qb:, ?labeledSubjects_hash)
+    ?classHierarchyDepth = uri(ls-qb:, ?classHierarchyDepth_hash)
+    ?propertyHierarchyDepth = uri(ls-qb:, ?propertyHierarchyDepth_hash)
+    ?averageTypedStringLength = uri(ls-qb:, ?stringLengthTyped_hash)
+    ?averageUntypedStringLength = uri(ls-qb:, ?stringLengthUntyped_hash)
+    ?links = uri(ls-qb:, ?links_hash)
+
+    ?last_updated = typedLiteral(?last_updated, xsd:dateTime)
+    ?triples = typedLiteral(?triples, xsd:integer)
     ?src = uri(?uri)
   From
-    [[Select a.uri, b.last_updated, triples, MD5(a.uri || 'ls-cr:usedClasses' || b.last_updated) hash From rdfdoc a JOIN stat_result b ON (b.rdfdoc_id = a.id)]]
+    [[Select rdfdoc.uri, sr.last_updated, sr.triples,
+    sr.entities, sr.literals, sr.blanks, sr.blanks_as_subject,
+    sr.blanks_as_object, sr.subclasses, sr.typed_subjects,
+    sr.labeled_subjects, sr.class_hierarchy_depth, sr.property_hierarchy_depth,
+    sr.properties_per_entity, sr.string_length_typed, sr.string_length_untyped, sr.links,
+    MD5(rdfdoc.uri || 'ls-cr:triples' || sr.triples) triples_hash,
+    MD5(rdfdoc.uri || 'ls-cr:distinctEntities' || sr.entities) entities_hash,
+    MD5(rdfdoc.uri || 'ls-cr:literals' || sr.literals) literals_hash,
+    MD5(rdfdoc.uri || 'ls-cr:blanks' || sr.blanks) blanks_hash,
+    MD5(rdfdoc.uri || 'ls-cr:blanksAsSubject' || sr.blanks_as_subject) blanksAsSubject_hash,
+    MD5(rdfdoc.uri || 'ls-cr:blanksAsObject' || sr.blanks_as_object) blanksAsObject_hash,
+    MD5(rdfdoc.uri || 'ls-cr:subclassUsage' || sr.subclasses) subclasses_hash,
+    MD5(rdfdoc.uri || 'ls-cr:typedSubjects' || sr.typed_subjects) typedSubjects_hash,
+    MD5(rdfdoc.uri || 'ls-cr:labeledSubjects' || sr.labeled_subjects) labeledSubjects_hash,
+    MD5(rdfdoc.uri || 'ls-cr:classHierarchyDepth' || sr.class_hierarchy_depth) classHierarchyDepth_hash,
+    MD5(rdfdoc.uri || 'ls-cr:propertyHierarchyDepth' || sr.property_hierarchy_depth) propertyHierarchyDepth_hash,
+    MD5(rdfdoc.uri || 'ls-cr:propertiesPerEntity' || sr.properties_per_entity) properties_per_entity_hash,
+    MD5(rdfdoc.uri || 'ls-cr:averageTypedStringLength' || sr.string_length_typed) stringLengthTyped_hash,
+    MD5(rdfdoc.uri || 'ls-cr:averageUntypedStringLength' || sr.string_length_untyped) stringLengthUntyped_hash,
+    MD5(rdfdoc.uri || 'ls-cr:links' || sr.links) links_hash
+    JOIN stat_result sr ON (sr.rdfdoc_id = rdfdoc.id)]]
 
 
 
