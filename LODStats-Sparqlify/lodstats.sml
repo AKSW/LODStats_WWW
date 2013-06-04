@@ -29,10 +29,117 @@ Create View StatResults As
       qb:dataSet ls-qb:LODStats ;
       ls-qb:statisticalCriterion ls-cr:triples ;
       ls-qb:timeOfMeasure ?t ;
-      ls-qb:value ?v ;
+      ls-qb:value ?triples_value ;
       ls-qb:unit "total amount" ;
       ls-qb:sourceDataset ?src .
      
+    ?entities
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:entitiesMentioned ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?entities_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
+
+    ?literals
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:literals ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?literals_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
+
+    ?blanksAsSubject
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:blanksAsSubject ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?blanksAsSubject_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
+
+    ?blanksAsObject
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:blanksAsObject ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?blanksAsObject_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
+
+    ?subclasses
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:subclassUsage ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?subclasses_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
+
+    ?typedSubjects
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:typedSubjects ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?typedSubjects_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
+
+    ?labeledSubjects
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:labeledSubjects ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?labeledSubjects_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
+
+    ?classHierarchyDepth
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:classHierarchyDepth ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?classHierarchyDepth_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
+
+    ?propertyHierarchyDepth
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:propertyHierarchyDepth ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?propertyHierarchyDepth_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
+
+    ?averageTypedStringLength
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:averageTypedStringLength ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?averageTypedStringLength_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
+
+    ?averageUntypedStringLength
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:averageUntypedStringLength ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?averageUntypedStringLength_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
+
+    ?links
+      a qb:Observation ;
+      qb:dataSet ls-qb:LODStats ;
+      ls-qb:statisticalCriterion ls-cr:links ;
+      ls-qb:timeOfMeasure ?t ;
+      ls-qb:value ?links_value ;
+      ls-qb:unit "total amount" ;
+      ls-qb:sourceDataset ?src .
   }
   With
     ?triples = uri(ls-qb:, ?triples_hash)
@@ -50,7 +157,19 @@ Create View StatResults As
     ?links = uri(ls-qb:, ?links_hash)
 
     ?last_updated = typedLiteral(?last_updated, xsd:dateTime)
-    ?triples = typedLiteral(?triples, xsd:integer)
+    ?triples_value = typedLiteral(?triples, xsd:integer)
+    ?entities_value = typedLiteral(?triples, xsd:integer)
+    ?literals_value = typedLiteral(?triples, xsd:integer)
+    ?blanksAsSubject_value = typedLiteral(?triples, xsd:integer)
+    ?blanksAsObject_value = typedLiteral(?triples, xsd:integer)
+    ?subclasses_value = typedLiteral(?triples, xsd:integer)
+    ?typedSubjects_value = typedLiteral(?triples, xsd:integer)
+    ?labeledSubjects_value = typedLiteral(?triples, xsd:integer)
+    ?classHierarchyDepth_value = typedLiteral(?triples, xsd:integer)
+    ?propertyHierarchyDepth_value = typedLiteral(?triples, xsd:integer)
+    ?averageTypedStringLength_value = typedLiteral(?triples, xsd:integer)
+    ?averageUntypedStringLength_value = typedLiteral(?triples, xsd:integer)
+    ?links_value = typedLiteral(?triples, xsd:integer)
     ?src = uri(?uri)
   From
     [[Select rdfdoc.uri, sr.last_updated, sr.triples,
