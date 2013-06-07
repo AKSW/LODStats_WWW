@@ -25,7 +25,7 @@ form#rdfdocsnavearchform input[type="text"] { box-shadow: inset 0 1px 3px #ccc; 
 form#rdfdocsnavearchform input[type="submit"] {margin: 0; border: 1px solid #fff; padding: 7px 20px; background: #fff; box-shadow: 0 0 5px #aaa; }
 
 form#rdfdocsnavearchform input[type="submit"]:hover { cursor: pointer; box-shadow: 0 0 1px #aaa; background: #333; color: #fff;}
-#rdfdocnav { position: absolute; border: 1px solid #eee; background: #fafafa; }
+#rdfdocnav { position: absolute; border: 1px solid #eee; }
 #rdfdocnavstatus { float:left; margin: 18px 10px; }
 #rdfdocnavstatus a { font-size: 20px; }
 
