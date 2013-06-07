@@ -40,6 +40,7 @@ form#rdfdocsnavearchform input[type="submit"]:hover { cursor: pointer; box-shado
 #lodstatslogo { position: absolute; top: 20px; left:20px; height: 80px; z-index: 1; }
 #lodstatslogotext { font-size: 36px; color: #fff; display: inline;}
 #lodstatslogoimg { position: relative; height: 80px; vertical-align: middle; }
+.lod2logo {position: relative; float:right; left:-20px;}
 h2 {font-size: 18px; color: #888; border-bottom: 1px solid #ccc; margin: 50px 0 10px 0; }
 h3 { margin: 15px 5px; color: #333; }
 p { line-height: 1.2; margin:  10px 0; }
