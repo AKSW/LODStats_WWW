@@ -1,0 +1,50 @@
+ServerTokens OS
+<VirtualHost *>
+	ServerAdmin martin@informatik.uni-leipzig.de
+	ServerName stats.lod2.eu
+	ServerAlias www.stats.lod2.eu
+
+	#ProxyVia On
+	#ProxyRequests Off
+	#RequestHeader unset Accept-Encoding
+        ProxyPass /sparql http://127.0.0.1:7531/sparql
+        ProxyPassReverse /sparql http://127.0.0.1:7531/sparql
+
+	WSGIScriptAlias /serbia /home/lodstatsserbia/lodstats_www/mod_wsgi/dispatch.wsgi
+	<Directory /home/lodstatsserbia/lodstats_www/mod_wsgi>
+		Order Deny,Allow
+		Allow From All
+	</Directory>
+
+	#ProxyPass /serbia/ http://127.0.0.1:5645/
+	#ProxyPass /serbia http://127.0.0.1:5645/
+	#ProxyPassReverse /serbia/ http://127.0.0.1:5645/
+
+	WSGIScriptAlias / /home/lodstats/lodstatswww/mod_wsgi/dispatch.wsgi
+	<Directory /home/lodstats/lodstatswww/mod_wsgi>
+		Order Deny,Allow
+		Allow From All
+	</Directory>
+
+	#ProxyPass / http://127.0.0.1:5644/
+	#ProxyPassReverse / http://127.0.0.1:5644/
+	#ProxyHTMLExtended On
+	#ProxyHTMLURLMap http://127.0.0.1:5645/ /serbia/
+	#ProxyHTMLURLMap http://127.0.0.1:5644/ /
+	#<Proxy *>
+	#	Order deny,allow
+	#	Allow from all
+	#</Proxy>
+
+#	DocumentRoot /var/www/stats.lod2.eu
+#	<Directory />
+#		Options Indexes FollowSymLinks MultiViews
+#		AllowOverride None
+#		Order allow,deny
+#		allow from all
+#	</Directory>
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	LogLevel warn
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
