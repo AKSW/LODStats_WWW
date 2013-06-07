@@ -1,5 +1,6 @@
 Prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 Prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+Prefix owl: <http://www.w3.org/2002/07/owl#>
 Prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 Prefix void: <http://rdfs.org/ns/void#> 
 Prefix void-ext: <http://stats.lod2.eu/rdf/void-ext/> 
@@ -142,7 +143,7 @@ Create View StatResults As
     ?literals_uri = uri(ls-qb:, ?literals_hash)
     ?literals_value = typedLiteral(?literals, xsd:integer)
 
-    ?blanksAsSubject_uri = uri(ls-qb:, ?blanks_as_subject_hash)
+    ?blanksAsSubject_uri = uri(ls-qb:, ?blanksAsSubject_hash)
     ?blanksAsSubject_value = typedLiteral(?blanks_as_subject, xsd:integer)
 
     ?blanksAsObject_uri = uri(ls-qb:, ?blanks_as_object_hash)
@@ -164,10 +165,10 @@ Create View StatResults As
     ?propertyHierarchyDepth_value = typedLiteral(?property_hierarchy_depth, xsd:integer)
     
     ?averageTypedStringLength_uri = uri(ls-qb:, ?string_length_typed_hash)
-    ?averageTypedStringLength_value = typedLiteral(?string_length_typed, xsd:integer)
+    ?averageTypedStringLength_value = typedLiteral(?string_length_typed, xsd:float)
 
     ?averageUntypedStringLength_uri = uri(ls-qb:, ?string_length_untyped_hash)
-    ?averageUntypedStringLength_value = typedLiteral(?string_length_untyped, xsd:integer)
+    ?averageUntypedStringLength_value = typedLiteral(?string_length_untyped, xsd:float)
 
     ?links_uri = uri(ls-qb:, ?links_hash)
     ?links_value = typedLiteral(?links, xsd:integer)
@@ -179,7 +180,7 @@ Create View StatResults As
     entities, MD5(rd.uri || 'ls-cr:entitiesMentioned' || sr.last_updated) entities_hash,
     literals, MD5(rd.uri || 'ls-cr:literals' || literals) literals_hash,
     blanks, MD5(rd.uri || 'ls-cr:blanks' || blanks) blanks_hash,
-    blanks_as_subject, MD5(rd.uri || 'ls-cr:blanksAsSubject' || blanks_as_subject) blanks_as_subject_hash,
+    blanks_as_subject, MD5(rd.uri || 'ls-cr:blanksAsSubject' || blanks_as_subject) "blanksAsSubject_hash",
     blanks_as_object, MD5(rd.uri || 'ls-cr:blanksAsObject' || sr.blanks_as_object) blanks_as_object_hash,
     subclasses, MD5(rd.uri || 'ls-cr:subclassUsage' || sr.subclasses) subclasses_hash,
     typed_subjects, MD5(rd.uri || 'ls-cr:typedSubjects' || sr.typed_subjects) typed_subjects_hash,
