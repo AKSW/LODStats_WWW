@@ -84,15 +84,11 @@ class StatResult(Base, _BaseMixin):
         json_dict = {}
         json_dict['triples'] = self.triples
         json_dict['last_updated'] = unicode(self.last_updated)
-        json_dict['triples_done'] = self.triples_done
         json_dict['has_errors'] = self.has_errors
         json_dict['errors'] = self.errors
         json_dict['warnings'] = self.warnings
         json_dict['last_warning'] = self.last_warning
-        json_dict['worked_on'] = self.worked_on
         json_dict['bytes'] = self.bytes
-        json_dict['bytes_download'] = self.bytes_download
-        json_dict['content_length'] = self.content_length
         json_dict['entities'] = self.entities
         json_dict['literals'] = self.literals
         json_dict['blanks'] = self.blanks

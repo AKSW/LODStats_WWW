@@ -125,6 +125,12 @@ class DoUpdate(Command):
                         raise BreakIt
                 for resource in package['resources']:
                     if resource['format'].lower() in ["api/sparql", "sparql"]:
+                        # prefer a sitemap.xml over sparql, if any
+                        for sitemap_resource in package['resources']:
+                            if sitemap_resource['format'].lower() in ["meta/sitemap"]:
+                                rdfdoc.format = "sitemap"
+                                rdfdoc.uri = sitemap_resource['url']
+                                raise BreakIt
                         rdfdoc.format = "sparql"
                         rdfdoc.uri = resource['url']
             except BreakIt:

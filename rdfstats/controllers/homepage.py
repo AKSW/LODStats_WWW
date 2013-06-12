@@ -76,7 +76,7 @@ class HomepageController(BaseController):
                 ).order_by(desc(model.RDFDoc.last_updated))[:5]
         return render('/home.html')
     
-    @beaker_cache(expire=86400)
+    @beaker_cache(expire=86400, type='file')
     def stats(self):
         c.rdfdocs = Session.query(model.RDFDoc).order_by(model.RDFDoc.worked_on.desc(), model.RDFDoc.name, model.RDFDoc.last_updated.desc(), ).all()
         c.rdfdoc_count = len(c.rdfdocs)

@@ -4,14 +4,14 @@
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outline:0}ins{text-decoration:none}
 
 /*structure*/
-body { background: #333; color: #333; font-family: Arial; font-size:14px; }
-.navigation-container { background: #eee; border: 1px solid #ddd; position:absolute; top: 80px;left: 80px; padding: 20px; margin: 0 80px 0 0; }
+body { background: #FFF; color: #555; font-family: Arial; font-size:14px; }
+.navigation-container { background: #EEF; border: 1px solid #a4b7dc; position:absolute; top: 20px;left: 165px; padding: 20px; margin: 0 80px 0 0; }
 #nav li { float: left; padding: 5px 15px 5px 10px; border-right: 1px solid #ccc; list-style: none; }
-#nav li a { color: #0a7f0f; text-decoration: none; font-weight: bold; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+#nav li a { color: #444; text-decoration: none; font-weight: bold; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
 #nav li.last { border-right: none; }
-.content { margin: 120px 20px;background: #fdfdfd; border: 1px solid #dfdfdf; padding: 40px; }
+.content { margin: 120px 20px;background: #EEF; border: 1px solid #a4b7dc; padding: 40px; }
 .content h1 { font-size: 20px; color: #888; border-bottom: 1px solid #ccc; margin: 50px 0 10px 0; }
-.content a { text-decoration: none; font-size: 15px; font-weight: bold; color: #0a7f0f; }
+.content a { text-decoration: none; font-size: 15px; font-weight: bold; color: #444; }
 .content p { margin-left: 10px; }
 .content ul { margin-left: 10px; }
 .navigation-container ul { float: left; }
@@ -25,7 +25,7 @@ form#rdfdocsnavearchform input[type="text"] { box-shadow: inset 0 1px 3px #ccc; 
 form#rdfdocsnavearchform input[type="submit"] {margin: 0; border: 1px solid #fff; padding: 7px 20px; background: #fff; box-shadow: 0 0 5px #aaa; }
 
 form#rdfdocsnavearchform input[type="submit"]:hover { cursor: pointer; box-shadow: 0 0 1px #aaa; background: #333; color: #fff;}
-#rdfdocnav { position: absolute; border: 1px solid #eee; background: #fafafa; }
+#rdfdocnav { position: absolute; border: 1px solid #eee; }
 #rdfdocnavstatus { float:left; margin: 18px 10px; }
 #rdfdocnavstatus a { font-size: 20px; }
 
@@ -40,6 +40,7 @@ form#rdfdocsnavearchform input[type="submit"]:hover { cursor: pointer; box-shado
 #lodstatslogo { position: absolute; top: 20px; left:20px; height: 80px; z-index: 1; }
 #lodstatslogotext { font-size: 36px; color: #fff; display: inline;}
 #lodstatslogoimg { position: relative; height: 80px; vertical-align: middle; }
+.lod2logo {position: relative; float:right; left:-20px;}
 h2 {font-size: 18px; color: #888; border-bottom: 1px solid #ccc; margin: 50px 0 10px 0; }
 h3 { margin: 15px 5px; color: #333; }
 p { line-height: 1.2; margin:  10px 0; }

@@ -61,6 +61,7 @@ class DoStats(Command):
         Session.commit()
         
     def term_handler(self, signum, frame):
+        log = logging.getLogger(__name__)
         log.debug("exiting through term handler")
         Session.rollback()
         if self.rdfdoc_to_do is None or self.rdfdoc_to_do.worked_on == False:
@@ -243,7 +244,10 @@ class DoStats(Command):
                 ls.count = result
                 Session.add(ls)
             # namespacelinks
-            for link_uri,result in rdfdocstats.stats_results['links']['namespacelinks'].iteritems():
+            from collections import OrderedDict
+            namespacelinks_ordered = OrderedDict(rdfdocstats.stats_results['links']['namespacelinks'])
+            nsl_count = 0
+            for link_uri,result in namespacelinks_ordered.iteritems():
                 c = Session.query(model.Link).filter(model.Link.code==link_uri).first()
                 if c is None:
                     c = model.Link()
@@ -254,6 +258,9 @@ class DoStats(Command):
                 rcs.stat_result = stat_result
                 rcs.count = result
                 Session.add(rcs)
+                nsl_count += 1
+                if nsl_count >= 500:
+                    break
         elif not modified:
             rdfdoc_to_do.current_stats = last_stat_result
             Session.delete(stat_result)
