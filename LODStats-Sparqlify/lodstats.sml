@@ -1,3 +1,4 @@
+Prefix fn: <http://aksw.org/sparqlify/>
 Prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 Prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 Prefix owl: <http://www.w3.org/2002/07/owl#>
@@ -6,22 +7,10 @@ Prefix void: <http://rdfs.org/ns/void#>
 Prefix void-ext: <http://stats.lod2.eu/rdf/void-ext/> 
 Prefix qb: <http://purl.org/linked-data/cube#> 
 Prefix dcterms: <http://purl.org/dc/terms/> 
+Prefix dc: <http://purl.org/dc/elements/1.1/>
 Prefix ls-void: <http://stats.lod2.eu/rdf/void/> 
 Prefix ls-qb: <http://stats.lod2.eu/rdf/qb/> 
 Prefix ls-cr: <http://stats.lod2.eu/rdf/qb/criteria/> 
-
-Create View Datasets As
-  Construct {
-    ?s
-      a void:Dataset ;
-      dcterms:source ?u .
-  }
-  With
-    ?s = uri('http://stats.lod2.eu/rdf/void/?source=', ?uri)
-    ?u = uri(?uri)
-  From
-    rdfdoc
-
 
 Create View StatResults As
   Construct {
@@ -174,7 +163,8 @@ Create View StatResults As
     ?links_value = typedLiteral(?links, xsd:integer)
 
     ?timeOfMeasure = typedLiteral(?last_updated, xsd:dateTime)
-    ?src = uri(?uri)
+    ?src = uri(?uri) 
+
   From
     [[Select rd.uri, sr.last_updated, triples, MD5(rd.uri || 'ls-cr:usedClasses' || sr.last_updated) triples_hash,
     entities, MD5(rd.uri || 'ls-cr:entitiesMentioned' || sr.last_updated) entities_hash,
@@ -215,41 +205,41 @@ Create View static As
       qb:dimension ls-qb:timeOfMeasure ;
       rdfs:label "Time of Measure (Component Specification)" .
 
+    ls-qb:timeOfMeasure
+      a qb:DimensonProperty ;
+      rdfs:label "Time of Measure" .
+
     ls-qb:sourceDatasetSpec
       a qb:ComponentSpecification ;
       qb:dimension ls-qb:sourceDataset ;
       rdfs:label "Source Dataset which is observed (Component Specification)" .
+
+    ls-qb:sourceDataset
+      a qb:DimensonProperty ;
+      rdfs:label "Source Dataset" .
 
     ls-qb:statisticalCriterionSpec
       a qb:ComponentSpecification ;
       qb:dimension ls-qb:statisticalCriterion ;
       rdf:label "Statistical Criterion (Component Specification)" .
 
+    ls-qb:statisticalCriterion 
+      a qb:DimensonProperty ;
+      rdfs:label "Statistical Criterion" .
+
     ls-qb:valueSpec
       a qb:ComponentSpecification ;
       qb:measure ls-qb:value ;
       rdfs:label "Measure of Observation (Component Specification)" .
       
+    ls-qb:value
+      a qb:MeasureProperty ;
+      rdfs:label "Measure of Observation" .
+
     ls-qb:unitSpec
       a qb:ComponentSpecification ;
       qb:attribute ls-qb:unit ;
       rdfs:label "Unit of Measure (Component Specification)" .
-      
-    ls-qb:timeOfMeasure
-      a qb:DimensonProperty ;
-      rdfs:label "Time of Measure" .
-
-    ls-qb:sourceDataset
-      a qb:DimensonProperty ;
-      rdfs:label "Source Dataset" .
-
-    ls-qb:statisticalCriterion 
-      a qb:DimensonProperty ;
-      rdfs:label "Statistical Criterion" .
-
-    ls-qb:value
-      a qb:MeasureProperty ;
-      rdfs:label "Measure of Observation" .
 
     ls-qb:unit
       a qb:AttributeProperty ;
