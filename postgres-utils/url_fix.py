@@ -16,3 +16,9 @@ def url_fix(s, charset='utf-8'):
 
 return url_fix(url)
 $$ LANGUAGE plpythonu;
+
+# SQL commands
+ALTER TABLE rdfdoc ADD COLUMN uri_fixed;
+UPDATE rdfdoc SET uri_fixed=url_fix(uri);
+ALTER TABLE rdfdoc DROP COLUMN uri;
+ALTER TABLE rdfdoc RENAME COLUMN uri_fixed TO uri;
