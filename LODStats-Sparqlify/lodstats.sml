@@ -166,7 +166,7 @@ Create View StatResults As
     ?src = uri(?uri) 
 
   From
-    [[Select rd.uri, sr.last_updated, triples, MD5(rd.uri || 'ls-cr:usedClasses' || sr.last_updated) triples_hash,
+    [[Select rd.uri uri, sr.last_updated, triples, MD5(rd.uri || 'ls-cr:usedClasses' || sr.last_updated) triples_hash,
     entities, MD5(rd.uri || 'ls-cr:entitiesMentioned' || sr.last_updated) entities_hash,
     literals, MD5(rd.uri || 'ls-cr:literals' || literals) literals_hash,
     blanks, MD5(rd.uri || 'ls-cr:blanks' || blanks) blanks_hash,
