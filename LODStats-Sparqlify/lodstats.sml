@@ -166,7 +166,8 @@ Create View StatResults As
     ?src = uri(?uri) 
 
   From
-    [[Select DISTINCT ON(rd.uri, sr.last_updated) rd.uri uri, sr.last_updated,
+    [[Select DISTINCT ON(rd.uri, date_trunc('month', sr.last_updated))
+    url_fix(rd.uri) uri, sr.last_updated,
     date_trunc('month', sr.last_updated) last_updated_trunc, 
     triples, MD5(rd.uri || 'ls-cr:usedClasses' || sr.last_updated) triples_hash,
     entities, MD5(rd.uri || 'ls-cr:entitiesMentioned' || sr.last_updated) entities_hash,
@@ -183,7 +184,7 @@ Create View StatResults As
     string_length_untyped, MD5(rd.uri || 'ls-cr:averageUntypedStringLength' || sr.string_length_untyped) string_length_untyped_hash,
     links, MD5(rd.uri || 'ls-cr:links' || sr.links) links_hash
     From rdfdoc rd JOIN stat_result sr ON (sr.rdfdoc_id = rd.id) 
-    WHERE triples IS NOT NULL ORDER BY rd.uri, sr.last_updated DESC]]
+    WHERE triples IS NOT NULL ORDER BY rd.uri, date_trunc('month', sr.last_updated) DESC]]
 
 
 
