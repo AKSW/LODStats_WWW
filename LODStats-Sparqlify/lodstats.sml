@@ -162,11 +162,13 @@ Create View StatResults As
     ?links_uri = uri(ls-qb:, ?links_hash)
     ?links_value = typedLiteral(?links, xsd:integer)
 
-    ?timeOfMeasure = typedLiteral(?last_updated, xsd:dateTime)
+    ?timeOfMeasure = typedLiteral(?last_updated_trunc, xsd:dateTime)
     ?src = uri(?uri) 
 
   From
-    [[Select rd.uri uri, sr.last_updated, triples, MD5(rd.uri || 'ls-cr:usedClasses' || sr.last_updated) triples_hash,
+    [[Select DISTINCT ON(rd.uri, sr.last_updated) rd.uri uri, sr.last_updated,
+    date_trunc('month', sr.last_updated) last_updated_trunc, 
+    triples, MD5(rd.uri || 'ls-cr:usedClasses' || sr.last_updated) triples_hash,
     entities, MD5(rd.uri || 'ls-cr:entitiesMentioned' || sr.last_updated) entities_hash,
     literals, MD5(rd.uri || 'ls-cr:literals' || literals) literals_hash,
     blanks, MD5(rd.uri || 'ls-cr:blanks' || blanks) blanks_hash,
@@ -180,7 +182,8 @@ Create View StatResults As
     string_length_typed, MD5(rd.uri || 'ls-cr:averageTypedStringLength' || sr.string_length_typed) string_length_typed_hash,
     string_length_untyped, MD5(rd.uri || 'ls-cr:averageUntypedStringLength' || sr.string_length_untyped) string_length_untyped_hash,
     links, MD5(rd.uri || 'ls-cr:links' || sr.links) links_hash
-    From rdfdoc rd JOIN stat_result sr ON (sr.rdfdoc_id = rd.id)]]
+    From rdfdoc rd JOIN stat_result sr ON (sr.rdfdoc_id = rd.id) 
+    WHERE triples IS NOT NULL ORDER BY rd.uri, sr.last_updated DESC]]
 
 
 
@@ -194,7 +197,6 @@ Create View static As
     ls-qb:LODStatsStructure
       a qb:DataStructureDefinition ;
       qb:component ls-qb:timeOfMeasureSpec ;
-      qb:component ls-qb:sourceDatasetSpec ;
       qb:component ls-qb:statisticalCriterionSpec ;
       qb:component ls-qb:valueSpec ;
       qb:component ls-qb:unitSpec ;
@@ -208,15 +210,6 @@ Create View static As
     ls-qb:timeOfMeasure
       a qb:DimensonProperty ;
       rdfs:label "Time of Measure" .
-
-    ls-qb:sourceDatasetSpec
-      a qb:ComponentSpecification ;
-      qb:dimension ls-qb:sourceDataset ;
-      rdfs:label "Source Dataset which is observed (Component Specification)" .
-
-    ls-qb:sourceDataset
-      a qb:DimensonProperty ;
-      rdfs:label "Source Dataset" .
 
     ls-qb:statisticalCriterionSpec
       a qb:ComponentSpecification ;
