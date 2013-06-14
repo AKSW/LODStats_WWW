@@ -166,26 +166,24 @@ Create View StatResults As
     ?src = uri(?uri) 
 
   From
-    [[Select DISTINCT ON(rd.uri, date_trunc('month', sr.last_updated))
-    url_fix(rd.uri) uri, sr.last_updated,
+    [[Select DISTINCT ON(rd.uri, date_trunc('month', sr.last_updated)) url_fix(rd.uri) uri, sr.last_updated,
     date_trunc('month', sr.last_updated) last_updated_trunc, 
     triples, MD5(rd.uri || 'ls-cr:usedClasses' || sr.last_updated) triples_hash,
     entities, MD5(rd.uri || 'ls-cr:entitiesMentioned' || sr.last_updated) entities_hash,
-    literals, MD5(rd.uri || 'ls-cr:literals' || literals) literals_hash,
-    blanks, MD5(rd.uri || 'ls-cr:blanks' || blanks) blanks_hash,
-    blanks_as_subject, MD5(rd.uri || 'ls-cr:blanksAsSubject' || blanks_as_subject) "blanksAsSubject_hash",
-    blanks_as_object, MD5(rd.uri || 'ls-cr:blanksAsObject' || sr.blanks_as_object) blanks_as_object_hash,
-    subclasses, MD5(rd.uri || 'ls-cr:subclassUsage' || sr.subclasses) subclasses_hash,
-    typed_subjects, MD5(rd.uri || 'ls-cr:typedSubjects' || sr.typed_subjects) typed_subjects_hash,
-    labeled_subjects, MD5(rd.uri || 'ls-cr:labeledSubjects' || sr.labeled_subjects) labeled_subjects_hash,
-    class_hierarchy_depth, MD5(rd.uri || 'ls-cr:classHierarchyDepth' || sr.class_hierarchy_depth) class_hierarchy_depth_hash,
-    property_hierarchy_depth, MD5(rd.uri || 'ls-cr:propertyHierarchyDepth' || sr.property_hierarchy_depth) property_hierarchy_depth_hash,
-    string_length_typed, MD5(rd.uri || 'ls-cr:averageTypedStringLength' || sr.string_length_typed) string_length_typed_hash,
-    string_length_untyped, MD5(rd.uri || 'ls-cr:averageUntypedStringLength' || sr.string_length_untyped) string_length_untyped_hash,
-    links, MD5(rd.uri || 'ls-cr:links' || sr.links) links_hash
+    literals, MD5(rd.uri || 'ls-cr:literals' || sr.last_updated) literals_hash,
+    blanks, MD5(rd.uri || 'ls-cr:blanks' || sr.last_updated) blanks_hash,
+    blanks_as_subject, MD5(rd.uri || 'ls-cr:blanksAsSubject' || sr.last_updated) "blanksAsSubject_hash",
+    blanks_as_object, MD5(rd.uri || 'ls-cr:blanksAsObject' || sr.last_updated) blanks_as_object_hash,
+    subclasses, MD5(rd.uri || 'ls-cr:subclassUsage' || sr.last_updated) subclasses_hash,
+    typed_subjects, MD5(rd.uri || 'ls-cr:typedSubjects' || sr.last_updated) typed_subjects_hash,
+    labeled_subjects, MD5(rd.uri || 'ls-cr:labeledSubjects' || sr.last_updated) labeled_subjects_hash,
+    class_hierarchy_depth, MD5(rd.uri || 'ls-cr:classHierarchyDepth' || sr.last_updated) class_hierarchy_depth_hash,
+    property_hierarchy_depth, MD5(rd.uri || 'ls-cr:propertyHierarchyDepth' || sr.last_updated) property_hierarchy_depth_hash,
+    string_length_typed, MD5(rd.uri || 'ls-cr:averageTypedStringLength' || sr.last_updated) string_length_typed_hash,
+    string_length_untyped, MD5(rd.uri || 'ls-cr:averageUntypedStringLength' || sr.last_updated) string_length_untyped_hash,
+    links, MD5(rd.uri || 'ls-cr:links' || sr.last_updated) links_hash
     From rdfdoc rd JOIN stat_result sr ON (sr.rdfdoc_id = rd.id) 
     WHERE triples IS NOT NULL ORDER BY rd.uri, date_trunc('month', sr.last_updated) DESC]]
-
 
 
 Create View static As
