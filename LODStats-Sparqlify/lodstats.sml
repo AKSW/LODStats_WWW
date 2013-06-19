@@ -34,7 +34,7 @@ Create View static As
       rdfs:label "Time of Measure (Component Specification)" .
 
     ls-qb:timeOfMeasure
-      a qb:DimensonProperty ;
+      a qb:DimensionProperty ;
       rdfs:label "Time of Measure" .
 
     ls-qb:statisticalCriterionSpec
@@ -43,7 +43,7 @@ Create View static As
       rdf:label "Statistical Criterion (Component Specification)" .
 
     ls-qb:statisticalCriterion 
-      a qb:DimensonProperty ;
+      a qb:DimensionProperty ;
       rdfs:label "Statistical Criterion" .
 
     ls-qb:sourceDatasetSpec
