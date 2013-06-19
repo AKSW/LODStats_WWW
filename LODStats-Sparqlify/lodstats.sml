@@ -162,11 +162,12 @@ Create View StatResults As
     ?links_uri = uri(ls-qb:, ?links_hash)
     ?links_value = typedLiteral(?links, xsd:integer)
 
-    ?timeOfMeasure = typedLiteral(?last_updated_trunc, xsd:dateTime)
+    ?timeOfMeasure = plainLiteral(?last_updated_trunc)
     ?src = uri(?uri) 
 
   From
-    [[Select DISTINCT ON(rd.uri, date_trunc('month', sr.last_updated)) url_fix(rd.uri) uri, sr.last_updated,
+    [[Select DISTINCT ON(rd.uri, date_trunc('month', sr.last_updated)) 
+    url_fix(rd.uri) uri, sr.last_updated,
     date_trunc('month', sr.last_updated) last_updated_trunc, 
     triples, MD5(rd.uri || 'ls-cr:usedClasses' || sr.last_updated) triples_hash,
     entities, MD5(rd.uri || 'ls-cr:entitiesMentioned' || sr.last_updated) entities_hash,
@@ -183,7 +184,7 @@ Create View StatResults As
     string_length_untyped, MD5(rd.uri || 'ls-cr:averageUntypedStringLength' || sr.last_updated) string_length_untyped_hash,
     links, MD5(rd.uri || 'ls-cr:links' || sr.last_updated) links_hash
     From rdfdoc rd JOIN stat_result sr ON (sr.rdfdoc_id = rd.id) 
-    WHERE triples IS NOT NULL ORDER BY rd.uri, date_trunc('month', sr.last_updated) DESC]]
+    WHERE triples IS NOT NULL ORDER BY rd.uri]]
 
 
 Create View static As
@@ -197,6 +198,7 @@ Create View static As
       a qb:DataStructureDefinition ;
       qb:component ls-qb:timeOfMeasureSpec ;
       qb:component ls-qb:statisticalCriterionSpec ;
+      qb:component ls-qb:sourceDatasetSpec ;
       qb:component ls-qb:valueSpec ;
       qb:component ls-qb:unitSpec ;
       rdfs:label "LODStats DataCube Structure Definition" .
@@ -218,6 +220,15 @@ Create View static As
     ls-qb:statisticalCriterion 
       a qb:DimensonProperty ;
       rdfs:label "Statistical Criterion" .
+
+    ls-qb:sourceDatasetSpec
+      a qb:ComponentSpecification ;
+      qb:dimension ls-qb:sourceDataset ;
+      rdf:label "Source Dataset (Component Specification)" .
+
+    ls-qb:sourceDataset 
+      a qb:DimensionProperty ;
+      rdfs:label "URL of the source dataset" .
 
     ls-qb:valueSpec
       a qb:ComponentSpecification ;
