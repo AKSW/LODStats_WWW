@@ -40,7 +40,7 @@ Create View static As
     ls-qb:statisticalCriterionSpec
       a qb:ComponentSpecification ;
       qb:dimension ls-qb:statisticalCriterion ;
-      rdf:label "Statistical Criterion (Component Specification)" .
+      rdfs:label "Statistical Criterion (Component Specification)" .
 
     ls-qb:statisticalCriterion 
       a qb:DimensionProperty ;
@@ -49,7 +49,7 @@ Create View static As
     ls-qb:sourceDatasetSpec
       a qb:ComponentSpecification ;
       qb:dimension ls-qb:sourceDataset ;
-      rdf:label "Source Dataset (Component Specification)" .
+      rdfs:label "Source Dataset (Component Specification)" .
 
     ls-qb:sourceDataset 
       a qb:DimensionProperty ;
