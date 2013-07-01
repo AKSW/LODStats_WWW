@@ -109,7 +109,10 @@ class LinksController(BaseController):
         # url('link', id=ID)
         if id is None:
             abort(404)
-        c.link = Session.query(model.Link).get(int(id))
+        try:
+            c.link = Session.query(model.Link).get(int(id))
+        except ValueError, e:
+            abort(404)
         if c.link is None:
             abort(404)
         c.ls=Session.query(model.LinkStat).join(model.StatResult, model.StatResult.current_of).filter(

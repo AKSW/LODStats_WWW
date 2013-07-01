@@ -116,7 +116,10 @@ class RdfClassesController(BaseController):
         # url('rdf_class', id=ID)
         if id is None:
             abort(404)
-        c.rdf_class = Session.query(model.RDFClass).get(int(id))
+        try:
+            c.rdf_class = Session.query(model.RDFClass).get(int(id))
+        except ValueError, e:
+            abort(404)
         if c.rdf_class is None:
             abort(404)
         c.cs=Session.query(model.RDFClassStat).join(model.StatResult, model.StatResult.current_of).filter(

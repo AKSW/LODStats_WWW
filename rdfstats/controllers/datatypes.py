@@ -113,7 +113,10 @@ class DatatypesController(BaseController):
         # url('datatype', id=ID)
         if id is None:
             abort(404)
-        c.datatype = Session.query(model.RDFDatatype).get(int(id))
+        try:
+            c.datatype = Session.query(model.RDFDatatype).get(int(id))
+        except ValueError, e:
+            abort(404)
         if c.datatype is None:
             abort(404)
         ds=Session.query(model.RDFDatatypeStat).join(model.StatResult, model.StatResult.current_of).filter(

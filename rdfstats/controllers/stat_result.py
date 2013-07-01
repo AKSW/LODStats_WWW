@@ -68,10 +68,15 @@ class StatResultController(BaseController):
         # url('stat_result', id=ID)
         if id is None:
             abort(404)
-        c.stats = Session.query(model.StatResult).get(int(id))
+        try:
+            c.stats = Session.query(model.StatResult).get(int(id))
+        except ValueError, e:
+            abort(404)
         if c.stats is None:
             abort(404)
         if format=='void':
+            if c.stats.void is None:
+                abort(404)
             response.content_type = 'text/plain'
             return render('/stat_result/void.txt')
         if format=='json' or 'application/json' in request.headers.get('accept', ''):

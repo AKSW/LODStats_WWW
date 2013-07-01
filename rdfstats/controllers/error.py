@@ -1,10 +1,10 @@
 import cgi
 
 from paste.urlparser import PkgResourcesParser
-from pylons.middleware import error_document_template
 from webhelpers.html.builder import literal
+from pylons import tmpl_context as c
 
-from rdfstats.lib.base import BaseController
+from rdfstats.lib.base import BaseController, render
 
 class ErrorController(BaseController):
     """Generates error documents as and when they are required.
@@ -20,12 +20,11 @@ class ErrorController(BaseController):
         """Render the error document"""
         request = self._py_object.request
         resp = request.environ.get('pylons.original_response')
-        content = literal(resp.body) or cgi.escape(request.GET.get('message', ''))
-        page = error_document_template % \
-            dict(prefix=request.environ.get('SCRIPT_NAME', ''),
-                 code=cgi.escape(request.GET.get('code', str(resp.status_int))),
-                 message=content)
-        return page
+        content = literal(resp.status) or cgi.escape(request.GET.get('message', ''))
+        c.prefix = request.environ.get('SCRIPT_NAME', '')
+        c.code = cgi.escape(request.GET.get('code', str(resp.status_int)))
+        c.message = content
+        return render('/error.html')
 
     def img(self, id):
         """Serve Pylons' stock images"""

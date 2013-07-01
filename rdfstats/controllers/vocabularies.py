@@ -108,7 +108,10 @@ class VocabulariesController(BaseController):
         # url('vocabulary', id=ID)
         if id is None:
             abort(404)
-        c.vocab = Session.query(model.Vocab).get(int(id))
+        try:
+            c.vocab = Session.query(model.Vocab).get(int(id))
+        except ValueError, e:
+            abort(404)
         if c.vocab is None:
             abort(404)
         vs=Session.query(model.RDFVocabStat).join(model.StatResult, model.StatResult.current_of).filter(

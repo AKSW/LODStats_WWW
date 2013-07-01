@@ -113,7 +113,10 @@ class LanguagesController(BaseController):
         # url('language', id=ID)
         if id is None:
             abort(404)
-        c.language = Session.query(model.Language).get(int(id))
+        try:
+            c.language = Session.query(model.Language).get(int(id))
+        except ValueError, e:
+            abort(404)        
         if c.language is None:
             abort(404)
         ls=Session.query(model.LanguageStat).join(model.StatResult, model.StatResult.current_of).filter(

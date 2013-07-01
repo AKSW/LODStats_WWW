@@ -114,7 +114,10 @@ class PropertiesController(BaseController):
         # url('property', id=ID)
         if id is None:
             abort(404)
-        c.prop = Session.query(model.RDFProperty).get(int(id))
+        try:
+            c.prop = Session.query(model.RDFProperty).get(int(id))
+        except ValueError, e:
+            abort(404)
         if c.prop is None:
             abort(404)
         ps=Session.query(model.RDFPropertyStat).join(model.StatResult, model.StatResult.current_of).filter(
