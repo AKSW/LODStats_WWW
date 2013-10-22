@@ -191,20 +191,20 @@ class HomepageController(BaseController):
         c.link_sum = Session.query('code', 'id', 'sum').from_statement(stmt).all()
         # basics
         # entities
-        stmt="SELECT avg(stat_result.entities) AS avg, min(stat_result.entities) AS min, max(stat_result.entities) AS max, median(stat_result.entities) AS median FROM \
+        stmt="SELECT avg(stat_result.entities) AS avg, min(stat_result.entities) AS min, max(stat_result.entities) AS max, median(stat_result.entities) AS median, sum(stat_result.entities) as sum FROM \
             stat_result,rdfdoc WHERE \
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
-        c.entities = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.entities = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # literals
-        stmt="SELECT avg(stat_result.literals) AS avg, min(stat_result.literals) AS min, max(stat_result.literals) AS max, median(stat_result.literals) AS median FROM \
+        stmt="SELECT avg(stat_result.literals) AS avg, min(stat_result.literals) AS min, max(stat_result.literals) AS max, median(stat_result.literals) AS median, sum(stat_result.literals) as sum FROM \
             stat_result,rdfdoc WHERE \
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
-        c.literals = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.literals = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # blanks
-        stmt="SELECT avg(stat_result.blanks) AS avg, min(stat_result.blanks) AS min, max(stat_result.blanks) AS max, median(stat_result.blanks) AS median FROM \
+        stmt="SELECT avg(stat_result.blanks) AS avg, min(stat_result.blanks) AS min, max(stat_result.blanks) AS max, median(stat_result.blanks) AS median, sum(stat_result.blanks) as sum FROM \
             stat_result,rdfdoc WHERE \
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
-        c.blanks = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.blanks = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # blanks as subject
         stmt="SELECT avg(stat_result.blanks_as_subject) AS avg, min(stat_result.blanks_as_subject) AS min, max(stat_result.blanks_as_subject) AS max, median(stat_result.blanks_as_subject) AS median FROM \
             stat_result,rdfdoc WHERE \
@@ -261,10 +261,10 @@ class HomepageController(BaseController):
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
         c.links = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
         # triples
-        stmt="SELECT avg(stat_result.triples) AS avg, min(stat_result.triples) AS min, max(stat_result.triples) AS max, median(stat_result.triples) AS median FROM \
+        stmt="SELECT avg(stat_result.triples) AS avg, min(stat_result.triples) AS min, max(stat_result.triples) AS max, median(stat_result.triples) AS median, sum(stat_result.triples) as sum FROM \
             stat_result,rdfdoc WHERE \
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL and rdfdoc.format!='sparql'"
-        c.triples = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.triples = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # # langs per dataset
         # stmt = "SELECT avg(count), min(count), max(count), median(count) FROM \
         #     (SELECT count(language_stat.count) as count,rdfdoc.id AS rdfd FROM \

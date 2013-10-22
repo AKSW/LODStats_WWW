@@ -164,3 +164,10 @@
   <td>${h.format_number(round(v_list[3], 2)) if type(v_list[3])==float else h.format_number(v_list[3])}</td>
 </%def>
 
+<%def name="avgminmaxsum(v_list)">
+  <td>${h.format_number(round(v_list[0], 2))}</td>
+  <td>${h.format_number(round(v_list[1], 2)) if type(v_list[1])==float else h.format_number(v_list[1])}</td>
+  <td>${h.format_number(round(v_list[2], 2)) if type(v_list[2])==float else h.format_number(v_list[2])}</td>
+  <td>${h.format_number(round(v_list[3], 2)) if type(v_list[3])==float else h.format_number(v_list[3])}</td>
+  <td>${h.format_number(round(v_list[4], 2)) if type(v_list[4])==float else h.format_number(v_list[4])}</td>
+</%def>

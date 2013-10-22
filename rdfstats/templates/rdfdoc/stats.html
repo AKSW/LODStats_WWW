@@ -6,11 +6,11 @@
 % if c.no_of_rdfdocs_with_triples > 0:
 <h2>Basic Statistics</h2>
 <table>
-  <th>Criterion</th><th>Average</th><th>Min</th><th>Max</th><th>Median</th>
-  <tr><td>Triples</td>${stat_result.avgminmax(c.triples)}</tr>
-  <tr><td>Entities</td>${stat_result.avgminmax(c.entities)}</tr>
-  <tr><td>Literals</td>${stat_result.avgminmax(c.literals)}</tr>
-  <tr><td>Blanks</td>${stat_result.avgminmax(c.blanks)}</tr>
+  <th>Criterion</th><th>Average</th><th>Min</th><th>Max</th><th>Median</th><th>Total</th>
+  <tr><td>Triples</td>${stat_result.avgminmaxsum(c.triples)}</tr>
+  <tr><td>Entities</td>${stat_result.avgminmaxsum(c.entities)}</tr>
+  <tr><td>Literals</td>${stat_result.avgminmaxsum(c.literals)}</tr>
+  <tr><td>Blanks</td>${stat_result.avgminmaxsum(c.blanks)}</tr>
   <tr><td>Blanks as subject</td>${stat_result.avgminmax(c.blanks_as_subject)}</tr>
   <tr><td>Blanks as object</td>${stat_result.avgminmax(c.blanks_as_object)}</tr>
   <tr><td>Subclasses</td>${stat_result.avgminmax(c.subclasses)}</tr>
