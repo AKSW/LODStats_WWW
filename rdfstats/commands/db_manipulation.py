@@ -33,6 +33,7 @@ from sqlalchemy import and_, or_
 import sys
 import signal
 import os
+import subprocess
 import logging
 
 from lodstats import RDFStats
@@ -53,11 +54,9 @@ class DoDB(Command):
         rdfdocs = Session.query(model.RDFDoc).all()
         warn = 0
         for rdfdoc in rdfdocs:
-            stats = self.get_stats_by_id(rdfdoc.id)
-            if stats.warnings:
-                warn = warn + int(stats.warnings)
-
-        print warn
+            script_path = "/home/lodstats/.virtualenvs/thedatahub/src/CSV2RDF-WIKI/csv2rdf/scripts/generate_resource_name.py"
+            (output, error) = subprocess.Popen([script_path, "-r", str(rdfdoc.uri)], stdout=subprocess.PIPE).communicate()
+            print rdfdoc.name, rdfdoc.uri, output.strip()
 
     def get_rdfdoc_by_name(self, name):
         return Session.query(model.RDFDoc).filter(model.RDFDoc.name==name).first()
