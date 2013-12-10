@@ -51,12 +51,26 @@ class DoDB(Command):
         self.logging_file_config(config_file)
         log = logging.getLogger(__name__)
 
-        rdfdocs = Session.query(model.RDFDoc).all()
-        warn = 0
+        self.clean_db()
+
+
+    def clean_db(self):
+        rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub == False).all()
         for rdfdoc in rdfdocs:
+            print rdfdoc.uri.encode('utf-8')
             script_path = "/home/lodstats/.virtualenvs/thedatahub/src/CSV2RDF-WIKI/csv2rdf/scripts/generate_resource_name.py"
-            (output, error) = subprocess.Popen([script_path, "-r", str(rdfdoc.uri)], stdout=subprocess.PIPE).communicate()
-            print rdfdoc.name, rdfdoc.uri, output.strip()
+            (output, error) = subprocess.Popen([script_path, "-r", rdfdoc.uri.encode('utf-8')], stdout=subprocess.PIPE).communicate()
+            generated_name = output.strip()
+            if(generated_name == ''):
+                print "Deleting" + str(rdfdoc)
+                rdfdoc.in_datahub = False
+                Session.commit()
+            else:
+                print "Renaming" + str(rdfdoc)
+                rdfdoc.name = generated_name
+                rdfdoc.in_datahub = True
+                Session.commit()
+                print generated_name 
 
     def get_rdfdoc_by_name(self, name):
         return Session.query(model.RDFDoc).filter(model.RDFDoc.name==name).first()

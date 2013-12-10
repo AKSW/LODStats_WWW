@@ -67,6 +67,7 @@ class RDFDoc(Base, _BaseMixin):
     current_stats_id = schema.Column(types.Integer(), schema.ForeignKey('stat_result.id',
                         use_alter=True, name='fk_rdfdoc_current_stats_id'))
     file_last_modified = schema.Column(types.DateTime())
+    in_datahub = schema.Column(types.Boolean)
     
     def reset_current_stats_and_worker(self):
         if self.current_stats is not None:
