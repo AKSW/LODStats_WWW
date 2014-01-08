@@ -88,9 +88,10 @@ class DoStats(Command):
         signal.signal(signal.SIGTERM, self.term_handler)
         
         # do not spawn more than two workers
-        number_of_workers = Session.query(model.WorkerProc).with_lockmode('read').count()
-        if number_of_workers >= 2:
-            return 0
+        #number_of_workers = Session.query(model.WorkerProc).with_lockmode('read').count()
+        #if number_of_workers >= 7:
+	#    print "Number of workers exceeded!"
+        #    return 0
         
         four_weeks_ago = datetime.today()-timedelta(weeks=1)
         rdfdoc_to_do = Session.query(model.RDFDoc).filter(
@@ -276,3 +277,4 @@ class DoStats(Command):
         stat_result.last_updated = datetime.now()
         Session.delete(self.worker_proc)
         Session.commit()
+	print "Done!"
