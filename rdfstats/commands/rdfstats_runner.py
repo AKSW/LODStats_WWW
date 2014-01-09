@@ -88,14 +88,15 @@ class DoStats(Command):
         signal.signal(signal.SIGTERM, self.term_handler)
         
         # do not spawn more than two workers
-        number_of_workers = Session.query(model.WorkerProc).with_lockmode('read').count()
-        if number_of_workers >= 2:
-            return 0
+        #number_of_workers = Session.query(model.WorkerProc).with_lockmode('read').count()
+        #if number_of_workers >= 2:
+        #    return 0
         
         four_weeks_ago = datetime.today()-timedelta(weeks=1)
         rdfdoc_to_do = Session.query(model.RDFDoc).filter(
                     and_(
                         model.RDFDoc.worked_on==False,
+                        model.RDFDoc.in_datahub==True,
                         or_(model.RDFDoc.last_updated<four_weeks_ago,
                             model.RDFDoc.last_updated == None))).with_lockmode('update')\
                     .order_by(model.RDFDoc.last_updated).first()
