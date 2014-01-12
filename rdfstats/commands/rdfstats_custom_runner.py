@@ -36,8 +36,8 @@ import os
 import logging
 
 from lodstats import RDFStats
-from lodstats.stats import lodstats as lodstats_stats
-from lodstats.exceptions import NotModified 
+from lodstats.stats import lodstats_old as lodstats_stats
+from lodstats.exceptions import NotModified
 
 class DoStats(Command):
     # Parser configuration
@@ -45,22 +45,27 @@ class DoStats(Command):
     usage = "paster-2.6 --plugin=Rdfstats rdfstats_runner"
     group_name = "rdfstats"
     parser = Command.standard_parser(verbose=False)
-    
+
     def callback_stats(self, rdfdocstat):
-        if rdfdocstat.no_of_statements > 0:
+        no_of_statements = rdfdocstat.get_no_of_triples()
+        if no_of_statements > 0:
             # update triples done
-            if rdfdocstat.no_of_statements % 10000 == 0:
-                self.stat_result.triples_done = rdfdocstat.no_of_statements
+            if no_of_statements % 10000 == 0:
+                self.stat_result.triples_done = no_of_statements
                 self.stat_result.warnings = rdfdocstat.warnings
                 Session.commit()
-    
-    def callback_parse(self, rdfdocstat):
+
+    def callback_function_download(self, rdfdocstat):
         self.stat_result.content_length = rdfdocstat.content_length
-        self.stat_result.bytes_download = rdfdocstat.bytes_download
-        self.stat_result.bytes = rdfdocstat.bytes
+        self.stat_result.bytes_downloaded = rdfdocstat.bytes_downloaded
         Session.commit()
-        
+
+    def callback_function_extraction(self, rdfdocstat):
+        self.stat_result.bytes = rdfdocstat.bytes_extracted
+        Session.commit()
+
     def term_handler(self, signum, frame):
+        log = logging.getLogger(__name__)
         log.debug("exiting through term handler")
         Session.rollback()
         if self.rdfdoc_to_do is None or self.rdfdoc_to_do.worked_on == False:
@@ -76,31 +81,34 @@ class DoStats(Command):
             sys.exit(0)
 
     def command(self):
-        
+
         self.logging_file_config(config_file)
         log = logging.getLogger(__name__)
-        
+
         self.worker_proc = None
         self.rdfdoc_to_do = None
-        
+
         signal.signal(signal.SIGINT, self.term_handler)
         signal.signal(signal.SIGTERM, self.term_handler)
-        
-        ## do not spawn more than two workers
+
+        # do not spawn more than two workers
         #number_of_workers = Session.query(model.WorkerProc).with_lockmode('read').count()
         #if number_of_workers >= 2:
-            #return 0
-        
-        update_name = "europeana-lod_75b5bafaee382a7fda709b0614ef3b3a"
-        rdfdoc_to_do = Session.query(model.RDFDoc).filter(
-                and_(model.RDFDoc.name == update_name,
-                     model.RDFDoc.worked_on==False)).with_lockmode('update')\
-                    .order_by(model.RDFDoc.last_updated).first()
+        #    return 0
+
+        four_weeks_ago = datetime.today()-timedelta(weeks=1)
+        #rdfdoc_to_do = Session.query(model.RDFDoc).filter(
+                    #and_(
+                        #model.RDFDoc.worked_on==False,
+                        #model.RDFDoc.in_datahub==True,
+                        #or_(model.RDFDoc.last_updated<four_weeks_ago,
+                            #model.RDFDoc.last_updated == None))).with_lockmode('update')\
+                    #.order_by(model.RDFDoc.last_updated).first()
+        rdfdoc_to_do = Session.query(model.RDFDoc).filter(model.RDFDoc.name=="eagle-i-utep.ttl").first()
         if rdfdoc_to_do is None:
+            log.warning("rdfdoc_to_do is None")
             return 0
 
-        rdfdoc_to_do.reset_current_stats_and_worker()
-        
         # register this worker
         self.worker_proc = model.WorkerProc()
         self.worker_proc.pid = os.getpid()
@@ -109,14 +117,14 @@ class DoStats(Command):
         rdfdoc_to_do.worked_on = True
         self.rdfdoc_to_do = rdfdoc_to_do
         log.debug("worker %i working on %i" % (self.worker_proc.pid, self.rdfdoc_to_do.id))
-        
+
         if rdfdoc_to_do.current_stats and rdfdoc_to_do.current_stats.errors == 'broken':
             rdfdoc_to_do.worked_on = False
             rdfdoc_to_do.last_updated = datetime.now()
             Session.delete(self.worker_proc)
             Session.commit()
             sys.exit(0)
-        
+
         last_stat_result = rdfdoc_to_do.current_stats
         stat_result = model.StatResult()
         self.stat_result = stat_result
@@ -129,32 +137,34 @@ class DoStats(Command):
         stat_result.warnings = None
         stat_result.last_warning = None
         Session.commit()
-        
+
+        log.info(rdfdoc_to_do.format)
+
         error = None
         modified = True # set True if remote file has been modified
         try:
-            if rdfdoc_to_do.format is None:
-                rdfdocstats = RDFStats(rdfdoc_to_do.uri, stats=lodstats_stats)
-            else:
-                rdfdocstats = RDFStats(rdfdoc_to_do.uri, format=rdfdoc_to_do.format, stats=lodstats_stats)
-            rdfdocstats.parse(callback_fun=self.callback_parse, if_modified_since = rdfdoc_to_do.file_last_modified)
-            rdfdocstats.do_stats(callback_fun=self.callback_stats)
+            rdfdocstats = RDFStats(rdfdoc_to_do.uri.encode('utf-8'), format=rdfdoc_to_do.format, stats=lodstats_stats)
+            rdfdocstats.set_callback_function_download(self.callback_function_download)
+            rdfdocstats.set_callback_function_extraction(self.callback_function_extraction)
+            rdfdocstats.set_callback_function_statistics(self.callback_stats)
+            rdfdocstats.start_statistics()
         except NotModified, errorstr:
+            log.warning("not modified")
             modified = False
         except Exception, errorstr:
+            log.error(errorstr)
             error = errorstr
 
-        print error
-        
         if error is None and (modified or rdfdoc_to_do.current_stats is None):
-            stat_result.triples = rdfdocstats.no_of_triples()
+            stat_result.triples = rdfdocstats.get_no_of_triples()
             stat_result.void = rdfdocstats.voidify('turtle')
-            stat_result.warnings = rdfdocstats.warnings
-            if rdfdocstats.warnings > 0:
+            stat_result.warnings = rdfdocstats.get_no_of_warnings()
+            if stat_result.warnings > 0:
                 stat_result.last_warning = unicode(rdfdocstats.last_warning.message, errors='replace')
             stat_result.has_errors = False
             stat_result.errors = None
-            for class_uri,result in rdfdocstats.stats_results['classes']['distinct'].iteritems():
+            stats_results = rdfdocstats.get_stats_results()
+            for class_uri,usage_count in stats_results['usedclasses']['usage_count'].iteritems():
                 c = Session.query(model.RDFClass).filter(model.RDFClass.uri==class_uri).first()
                 if c is None:
                     c = model.RDFClass()
@@ -163,10 +173,10 @@ class DoStats(Command):
                 rcs = model.RDFClassStat()
                 rcs.rdf_class = c
                 rcs.stat_result = stat_result
-                rcs.count = result
+                rcs.count = usage_count
                 Session.add(rcs)
             # vocab:
-            for base_uri,result in rdfdocstats.stats_results['vocabularies'].iteritems():
+            for base_uri,result in stats_results['vocabularies'].iteritems():
                 if result > 0:
                     v = Session.query(model.Vocab).filter(model.Vocab.uri==base_uri).first()
                     if v is None:
@@ -179,7 +189,7 @@ class DoStats(Command):
                     rvs.count = result
                     Session.add(rvs)
             # props
-            for property_uri,result in rdfdocstats.stats_results['propertiesall']['distinct'].iteritems():
+            for property_uri,result in stats_results['propertyusage']['usage_count'].iteritems():
                 p = Session.query(model.RDFProperty).filter(model.RDFProperty.uri==property_uri).first()
                 if p is None:
                     p = model.RDFProperty(uri=property_uri)
@@ -187,7 +197,7 @@ class DoStats(Command):
                 rps = model.RDFPropertyStat(rdf_property=p, stat_result=stat_result, count=result)
                 Session.add(rps)
             # defined classes
-            for class_uri,result in rdfdocstats.stats_results['classesdefined']['histogram'].iteritems():
+            for class_uri,result in stats_results['classesdefined']['usage_count'].iteritems():
                 c = Session.query(model.DefinedClass).filter(model.DefinedClass.uri==class_uri).first()
                 if c is None:
                     c = model.DefinedClass()
@@ -199,29 +209,30 @@ class DoStats(Command):
                 rcs.count = result
                 Session.add(rcs)
             # basics
-            stat_result.entities = rdfdocstats.stats_results['entities']['count']
-            stat_result.literals = rdfdocstats.stats_results['literals']['count']
-            stat_result.blanks = rdfdocstats.stats_results['blanks']['count']
-            stat_result.blanks_as_subject = rdfdocstats.stats_results['blanks']['s']
-            stat_result.blanks_as_object = rdfdocstats.stats_results['blanks']['o']
-            stat_result.subclasses = rdfdocstats.stats_results['subclasses']['count']
-            stat_result.typed_subjects = rdfdocstats.stats_results['typedsubjects']['count']
-            stat_result.labeled_subjects = rdfdocstats.stats_results['labeledsubjects']['count']
+            stat_result.entities = stats_results['entities']['count']
+            stat_result.literals = stats_results['literals']['count']
+            stat_result.blanks = stats_results['blanksassubject']['count'] + stats_results['blanksasobject']['count']
+            stat_result.blanks_as_subject = stats_results['blanksassubject']['count']
+            stat_result.blanks_as_object = stats_results['blanksasobject']['count']
+            stat_result.subclasses = stats_results['subclassusage']['count']
+            stat_result.typed_subjects = stats_results['typedsubjects']['count']
+            stat_result.labeled_subjects = stats_results['labeledsubjects']['count']
             # hierarchy depth
-            if len(rdfdocstats.stats_results['classhierarchy']) > 0:
-                stat_result.class_hierarchy_depth = rdfdocstats.stats_results['classhierarchy'][max(rdfdocstats.stats_results['classhierarchy'],
-                    key=rdfdocstats.stats_results['classhierarchy'].get)]
-            if len(rdfdocstats.stats_results['propertyhierarchy']) > 0:
-                stat_result.property_hierarchy_depth = rdfdocstats.stats_results['propertyhierarchy'][max(rdfdocstats.stats_results['propertyhierarchy'],
-                    key=rdfdocstats.stats_results['propertyhierarchy'].get)]
+            print stats_results['propertyhierarchydepth']
+            if stats_results['classhierarchydepth']['count'] > 0:
+                stat_result.class_hierarchy_depth = stats_results['classhierarchydepth']['count'][max(rdfdocstats.stats_results['classhierarchydepth']['count'],
+                    key=stats_results['classhierarchydepth']['count'].get)]
+            if stats_results['propertyhierarchydepth']['count'] > 0:
+                stat_result.property_hierarchy_depth = stats_results['propertyhierarchydepth']['count'][max(stats_results['propertyhierarchydepth']['count'],
+                    key=stats_results['propertyhierarchydepth']['count'].get)]
             # averages
-            stat_result.properties_per_entity = rdfdocstats.stats_results['propertiesperentity']['avg']
-            stat_result.string_length_typed = rdfdocstats.stats_results['stringlength']['avg_typed']
-            stat_result.string_length_untyped = rdfdocstats.stats_results['stringlength']['avg_untyped']
+            stat_result.properties_per_entity = stats_results['propertiesperentity']['avg']
+            stat_result.string_length_typed = stats_results['stringlength']['avg_typed']
+            stat_result.string_length_untyped = stats_results['stringlength']['avg_untyped']
             # links
-            stat_result.links = rdfdocstats.stats_results['links']['count']
+            stat_result.links = stats_results['links']['count']
             # datatypes
-            for d_uri,result in rdfdocstats.stats_results['datatypes'].iteritems():
+            for d_uri,result in stats_results['datatypes'].iteritems():
                 d = Session.query(model.RDFDatatype).filter(model.RDFDatatype.uri==d_uri).first()
                 if d is None:
                     d = model.RDFDatatype()
@@ -233,7 +244,7 @@ class DoStats(Command):
                 ds.count = result
                 Session.add(ds)
             # languages
-            for code,result in rdfdocstats.stats_results['languages'].iteritems():
+            for code,result in stats_results['languages'].iteritems():
                 l = Session.query(model.Language).filter(model.Language.code==code).first()
                 if l is None:
                     l = model.Language()
@@ -245,7 +256,10 @@ class DoStats(Command):
                 ls.count = result
                 Session.add(ls)
             # namespacelinks
-            for link_uri,result in rdfdocstats.stats_results['links']['namespacelinks'].iteritems():
+            from collections import OrderedDict
+            namespacelinks_ordered = OrderedDict(stats_results['links']['namespacelinks'])
+            nsl_count = 0
+            for link_uri,result in namespacelinks_ordered.iteritems():
                 c = Session.query(model.Link).filter(model.Link.code==link_uri).first()
                 if c is None:
                     c = model.Link()
@@ -256,6 +270,9 @@ class DoStats(Command):
                 rcs.stat_result = stat_result
                 rcs.count = result
                 Session.add(rcs)
+                nsl_count += 1
+                if nsl_count >= 500:
+                    break
         elif not modified:
             rdfdoc_to_do.current_stats = last_stat_result
             Session.delete(stat_result)
@@ -264,10 +281,15 @@ class DoStats(Command):
             stat_result.void = None
             stat_result.has_errors = True
             stat_result.errors = unicode(error)
-        
+
         rdfdoc_to_do.worked_on = False
         rdfdoc_to_do.last_updated = datetime.now()
         rdfdoc_to_do.file_last_modified = rdfdocstats.last_modified
         stat_result.last_updated = datetime.now()
         Session.delete(self.worker_proc)
         Session.commit()
+
+
+if __name__ == "__main__":
+    do_stats = DoStats(None)
+    do_stats.command()
