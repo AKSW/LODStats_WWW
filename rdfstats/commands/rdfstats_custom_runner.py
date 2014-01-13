@@ -39,7 +39,7 @@ from lodstats import RDFStats
 from lodstats.stats import lodstats_old as lodstats_stats
 from lodstats.exceptions import NotModified
 
-dataset_id = 196
+dataset_id = 1888
 
 class DoStats(Command):
     # Parser configuration
@@ -162,7 +162,8 @@ class DoStats(Command):
             stat_result.void = rdfdocstats.voidify('turtle')
             stat_result.warnings = rdfdocstats.get_no_of_warnings()
             if stat_result.warnings > 0:
-                stat_result.last_warning = unicode(rdfdocstats.last_warning.message, errors='replace')
+		last_warning = rdfdocstats.get_last_warning()
+                stat_result.last_warning = unicode(last_warning.message, errors='replace')
             stat_result.has_errors = False
             stat_result.errors = None
             stats_results = rdfdocstats.get_stats_results()
