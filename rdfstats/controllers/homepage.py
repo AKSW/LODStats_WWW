@@ -206,30 +206,30 @@ class HomepageController(BaseController):
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
         c.blanks = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # blanks as subject
-        stmt="SELECT avg(stat_result.blanks_as_subject) AS avg, min(stat_result.blanks_as_subject) AS min, max(stat_result.blanks_as_subject) AS max, median(stat_result.blanks_as_subject) AS median FROM \
+        stmt="SELECT avg(stat_result.blanks_as_subject) AS avg, min(stat_result.blanks_as_subject) AS min, max(stat_result.blanks_as_subject) AS max, median(stat_result.blanks_as_subject) AS median, sum(stat_result.blanks_as_subject) AS sum FROM \
             stat_result,rdfdoc WHERE \
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
-        c.blanks_as_subject = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.blanks_as_subject = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # blanks as object
-        stmt="SELECT avg(stat_result.blanks_as_object) AS avg, min(stat_result.blanks_as_object) AS min, max(stat_result.blanks_as_object) AS max, median(stat_result.blanks_as_object) AS median FROM \
+        stmt="SELECT avg(stat_result.blanks_as_object) AS avg, min(stat_result.blanks_as_object) AS min, max(stat_result.blanks_as_object) AS max, median(stat_result.blanks_as_object) AS median, sum(stat_result.blanks_as_object) AS sum FROM \
             stat_result,rdfdoc WHERE \
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
-        c.blanks_as_object = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.blanks_as_object = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # subclasses
-        stmt="SELECT avg(stat_result.subclasses) AS avg, min(stat_result.subclasses) AS min, max(stat_result.subclasses) AS max, median(stat_result.subclasses) AS median FROM \
+        stmt="SELECT avg(stat_result.subclasses) AS avg, min(stat_result.subclasses) AS min, max(stat_result.subclasses) AS max, median(stat_result.subclasses) AS median, sum(stat_result.subclasses) as sum FROM \
             stat_result,rdfdoc WHERE \
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
-        c.subclasses = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.subclasses = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # typed subjects
-        stmt="SELECT avg(stat_result.typed_subjects) AS avg, min(stat_result.typed_subjects) AS min, max(stat_result.typed_subjects) AS max, median(stat_result.typed_subjects) AS median FROM \
+        stmt="SELECT avg(stat_result.typed_subjects) AS avg, min(stat_result.typed_subjects) AS min, max(stat_result.typed_subjects) AS max, median(stat_result.typed_subjects) AS median, sum(stat_result.typed_subjects) as sum FROM \
             stat_result,rdfdoc WHERE \
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
-        c.typed_subjects = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.typed_subjects = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # labeled subjects
-        stmt="SELECT avg(stat_result.labeled_subjects) AS avg, min(stat_result.labeled_subjects) AS min, max(stat_result.labeled_subjects) AS max, median(stat_result.labeled_subjects) AS median FROM \
+        stmt="SELECT avg(stat_result.labeled_subjects) AS avg, min(stat_result.labeled_subjects) AS min, max(stat_result.labeled_subjects) AS max, median(stat_result.labeled_subjects) AS median, sum(stat_result.labeled_subjects) as sum FROM \
             stat_result,rdfdoc WHERE \
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
-        c.labeled_subjects = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.labeled_subjects = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # properties_per_entity
         stmt="SELECT avg(stat_result.properties_per_entity) AS avg, min(stat_result.properties_per_entity) AS min, max(stat_result.properties_per_entity) AS max, median(stat_result.properties_per_entity) AS median FROM \
             stat_result,rdfdoc WHERE \
@@ -256,10 +256,10 @@ class HomepageController(BaseController):
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
         c.property_hierarchy_depth = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
         # links
-        stmt="SELECT avg(stat_result.links) AS avg, min(stat_result.links) AS min, max(stat_result.links) AS max, median(stat_result.links) AS median FROM \
+        stmt="SELECT avg(stat_result.links) AS avg, min(stat_result.links) AS min, max(stat_result.links) AS max, median(stat_result.links) AS median, sum(stat_result.links) AS sum FROM \
             stat_result,rdfdoc WHERE \
             rdfdoc.current_stats_id=stat_result.id and stat_result.entities is not NULL"
-        c.links = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.links = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # triples
         stmt="SELECT avg(stat_result.triples) AS avg, min(stat_result.triples) AS min, max(stat_result.triples) AS max, median(stat_result.triples) AS median, sum(stat_result.triples) as sum FROM \
             stat_result,rdfdoc WHERE \
@@ -273,24 +273,24 @@ class HomepageController(BaseController):
         #     and language.id=language_stat.language_id and stat_result.entities is not NULL GROUP BY rdfdoc.id) as counter"
         # c.dataset_lang = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
         # vocabs per dataset
-        stmt = "SELECT avg(count), min(count), max(count), median(count) FROM \
+        stmt = "SELECT avg(count), min(count), max(count), median(count), sum(count) FROM \
             (SELECT count(rdf_vocab_stat.count) as count,rdfdoc.id AS rdfd FROM \
             rdf_vocab_stat,stat_result,rdfdoc,vocab WHERE \
             rdf_vocab_stat.stat_result_id=stat_result.id and rdfdoc.current_stats_id=stat_result.id \
             and vocab.id=rdf_vocab_stat.vocab_id and stat_result.entities is not NULL GROUP BY rdfdoc.id) as counter"
-        c.dataset_vocab = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.dataset_vocab = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # classes per dataset
-        stmt = "SELECT avg(count), min(count), max(count), median(count) FROM \
+        stmt = "SELECT avg(count), min(count), max(count), median(count), sum(count) FROM \
             (SELECT count(rdf_class_stat_result.count) as count,rdfdoc.id AS rdfd FROM \
             rdf_class_stat_result,stat_result,rdfdoc,rdf_class WHERE \
             rdf_class_stat_result.stat_result_id=stat_result.id and rdfdoc.current_stats_id=stat_result.id \
             and rdf_class.id=rdf_class_stat_result.rdf_class_id and stat_result.entities is not NULL GROUP BY rdfdoc.id) as counter"
-        c.dataset_classes = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.dataset_classes = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         # properties per dataset
-        stmt = "SELECT avg(count), min(count), max(count), median(count) FROM \
+        stmt = "SELECT avg(count), min(count), max(count), median(count), sum(count) FROM \
             (SELECT count(rdf_property_stat.count) as count,rdfdoc.id AS rdfd FROM \
             rdf_property_stat,stat_result,rdfdoc,rdf_property WHERE \
             rdf_property_stat.stat_result_id=stat_result.id and rdfdoc.current_stats_id=stat_result.id \
             and rdf_property.id=rdf_property_stat.rdf_property_id and stat_result.entities is not NULL GROUP BY rdfdoc.id) as counter"
-        c.dataset_props = Session.query('avg', 'min', 'max', 'median').from_statement(stmt).one()
+        c.dataset_props = Session.query('avg', 'min', 'max', 'median', 'sum').from_statement(stmt).one()
         return render('/rdfdoc/stats.html')

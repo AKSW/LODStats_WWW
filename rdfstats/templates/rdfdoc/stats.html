@@ -11,20 +11,20 @@
   <tr><td>Entities</td>${stat_result.avgminmaxsum(c.entities)}</tr>
   <tr><td>Literals</td>${stat_result.avgminmaxsum(c.literals)}</tr>
   <tr><td>Blanks</td>${stat_result.avgminmaxsum(c.blanks)}</tr>
-  <tr><td>Blanks as subject</td>${stat_result.avgminmax(c.blanks_as_subject)}</tr>
-  <tr><td>Blanks as object</td>${stat_result.avgminmax(c.blanks_as_object)}</tr>
-  <tr><td>Subclasses</td>${stat_result.avgminmax(c.subclasses)}</tr>
-  <tr><td>Typed subjects</td>${stat_result.avgminmax(c.typed_subjects)}</tr>
-  <tr><td>Labeled subjects</td>${stat_result.avgminmax(c.labeled_subjects)}</tr>
+  <tr><td>Blanks as subject</td>${stat_result.avgminmaxsum(c.blanks_as_subject)}</tr>
+  <tr><td>Blanks as object</td>${stat_result.avgminmaxsum(c.blanks_as_object)}</tr>
+  <tr><td>Subclasses</td>${stat_result.avgminmaxsum(c.subclasses)}</tr>
+  <tr><td>Typed subjects</td>${stat_result.avgminmaxsum(c.typed_subjects)}</tr>
+  <tr><td>Labeled subjects</td>${stat_result.avgminmaxsum(c.labeled_subjects)}</tr>
   <tr><td>Average properties per entity</td>${stat_result.avgminmax(c.properties_per_entity)}</tr>
   <tr><td>Average string length typed</td>${stat_result.avgminmax(c.string_length_typed)}</tr>
   <tr><td>Average string length untyped</td>${stat_result.avgminmax(c.string_length_untyped)}</tr>
   <tr><td>Average class hierarchy depth</td>${stat_result.avgminmax(c.class_hierarchy_depth)}</tr>
-  <tr><td>Links</td>${stat_result.avgminmax(c.links)}</tr>
+  <tr><td>Links</td>${stat_result.avgminmaxsum(c.links)}</tr>
   <tr><td>Average property hierarchy depth</td>${stat_result.avgminmax(c.property_hierarchy_depth)}</tr>
-  <tr><td>Vocabularies</td>${stat_result.avgminmax(c.dataset_vocab)}</tr>
-  <tr><td>Classes</td>${stat_result.avgminmax(c.dataset_classes)}</tr>
-  <tr><td>Properties</td>${stat_result.avgminmax(c.dataset_props)}</tr>
+  <tr><td>Vocabularies</td>${stat_result.avgminmaxsum(c.dataset_vocab)}</tr>
+  <tr><td>Classes</td>${stat_result.avgminmaxsum(c.dataset_classes)}</tr>
+  <tr><td>Properties</td>${stat_result.avgminmaxsum(c.dataset_props)}</tr>
 </table>
 
 <h2>Overall numbers</h2>
