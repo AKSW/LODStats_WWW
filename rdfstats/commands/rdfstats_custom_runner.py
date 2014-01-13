@@ -39,6 +39,8 @@ from lodstats import RDFStats
 from lodstats.stats import lodstats_old as lodstats_stats
 from lodstats.exceptions import NotModified
 
+dataset_id = 196
+
 class DoStats(Command):
     # Parser configuration
     summary = "compute stats for RDF data, get URI from DB"
@@ -104,7 +106,7 @@ class DoStats(Command):
                         #or_(model.RDFDoc.last_updated<four_weeks_ago,
                             #model.RDFDoc.last_updated == None))).with_lockmode('update')\
                     #.order_by(model.RDFDoc.last_updated).first()
-        rdfdoc_to_do = Session.query(model.RDFDoc).filter(model.RDFDoc.name=="eagle-i-utep.ttl").first()
+        rdfdoc_to_do = Session.query(model.RDFDoc).filter(model.RDFDoc.id==dataset_id).first()
         if rdfdoc_to_do is None:
             log.warning("rdfdoc_to_do is None")
             return 0

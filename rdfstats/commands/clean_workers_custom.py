@@ -29,6 +29,8 @@ load_environment(conf.global_conf, conf.local_conf)
 from rdfstats.model.meta import Session
 from rdfstats import model
 
+dataset_id = 1440
+
 class DoCleanWorkers(Command):
     # Parser configuration
     summary = "Administration functions for LODStats"
@@ -38,8 +40,7 @@ class DoCleanWorkers(Command):
     
     def command(self):
 
-        rdfdoc_name = "europeana-lod_afdc218340279ee87c3a23abeda35227"
-        rdfdoc_to_do = Session.query(model.RDFDoc).filter(model.RDFDoc.name == rdfdoc_name).with_lockmode('update')\
+        rdfdoc_to_do = Session.query(model.RDFDoc).filter(model.RDFDoc.id == dataset_id).with_lockmode('update')\
                     .order_by(model.RDFDoc.last_updated).first()
         if rdfdoc_to_do is None:
             return 0
