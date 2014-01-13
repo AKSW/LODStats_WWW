@@ -96,7 +96,7 @@ class DoStats(Command):
         #if number_of_workers >= 7:
 	#    print "Number of workers exceeded!"
         #    return 0
-        
+
 
         four_weeks_ago = datetime.today()-timedelta(weeks=1)
         #rdfdoc_to_do = Session.query(model.RDFDoc).filter(
@@ -149,7 +149,7 @@ class DoStats(Command):
         error = None
         modified = True # set True if remote file has been modified
         try:
-            rdfdocstats = RDFStats(rdfdoc_to_do.uri, format=rdfdoc_to_do.format, stats=lodstats_stats)
+            rdfdocstats = RDFStats(rdfdoc_to_do.uri.encode('utf-8'), format=rdfdoc_to_do.format, stats=lodstats_stats)
             rdfdocstats.set_callback_function_download(self.callback_function_download)
             rdfdocstats.set_callback_function_extraction(self.callback_function_extraction)
             rdfdocstats.set_callback_function_statistics(self.callback_stats)

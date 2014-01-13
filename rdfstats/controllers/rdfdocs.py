@@ -45,7 +45,7 @@ class RdfdocsController(BaseController):
     def index(self, format='html'):
         """GET /rdfdocs: All items in the collection"""
         # url('rdfdocs')
-        rdfdocs = Session.query(model.RDFDoc).join(model.RDFDoc.current_stats)
+        rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats)
         c.query_string = '?'
         c.search = ''
         if request.GET.has_key('search'):
@@ -95,15 +95,15 @@ class RdfdocsController(BaseController):
                 json_rdfdocs.append(r.name)
             return json.dumps(json_rdfdocs)
         return render('/rdfdoc/index.html')
-    
+
     def valid_and_available(self):
-        c.rdfdocs = Session.query(model.RDFDoc).join(model.RDFDoc.current_stats).filter(and_(model.StatResult.triples > 0, model.RDFDoc.format != 'sparql')).all()
+        c.rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(and_(model.StatResult.triples > 0, model.RDFDoc.format != 'sparql')).all()
         response.content_type = 'text/plain'
         return render('/rdfdoc/txtlist.txt')
-    
+
     def void(self):
         """send VoID of every dataset in a ZIP file"""
-        rdfdocs = Session.query(model.RDFDoc).join(model.RDFDoc.current_stats).filter(and_(model.StatResult.triples > 0, model.RDFDoc.format != 'sparql'))
+        rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(and_(model.StatResult.triples > 0, model.RDFDoc.format != 'sparql'))
         zip_temp_file = tempfile.NamedTemporaryFile(prefix='lodstatswww_voidzip')
         zip_temp = zipfile.ZipFile(zip_temp_file, 'w', zipfile.ZIP_DEFLATED)
         for r in rdfdocs:
@@ -115,7 +115,7 @@ class RdfdocsController(BaseController):
         # FIXME: use paste.fileapp if this ever gets too large
         for data in zip_temp_file:
             response.write(data)
-        
+
     def show(self, id=None, format='html'):
         if id is None:
             abort(404)
@@ -155,7 +155,7 @@ class RdfdocsController(BaseController):
         c.rdfdoc_f = model.RDFDoc_fa
         c.rdfdoc_f.configure(include=[c.rdfdoc_f.uri, c.rdfdoc_f.name, c.rdfdoc_f.format])
         return render('/rdfdoc/new.html')
-        
+
     @restrict('POST')
     def create(self):
         """POST /rdfdocs: Create a new item"""
@@ -180,7 +180,7 @@ class RdfdocsController(BaseController):
         #    h.form(url('rdfdoc', id=ID),
         #           method='put')
         # url('rdfdoc', id=ID)
-        
+
     def edit(self, id=None):
         """GET /rdfdocs/id/edit: Form to edit an existing item"""
         # url('edit_rdfdoc', id=ID)
@@ -193,7 +193,7 @@ class RdfdocsController(BaseController):
             abort(404)
         c.rdfdoc_f = model.RDFDoc_fa.bind(c.rdfdoc)
         return render('/rdfdoc/edit.html')
-        
+
     def delete(self, id):
         """DELETE /rdfdocs/id: Delete an existing item"""
         # Forms posted to this method should contain a hidden field:
