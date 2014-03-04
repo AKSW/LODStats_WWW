@@ -27,6 +27,8 @@ def make_map(config):
     map.resource('link', 'links')
     map.resource('language', 'languages')
     map.resource('stat_result', 'stat_result')
+    map.resource('dataset', 'datasets')
+    map.connect('/datasets/*id', controller='datasets', action='show')
     map.connect('/', controller='homepage', action='home')
     map.connect('/stats', controller='homepage', action='stats')
     map.connect('/rdfdocs/void', controller='rdfdocs', action='void')
