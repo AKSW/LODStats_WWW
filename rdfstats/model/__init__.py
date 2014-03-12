@@ -22,6 +22,7 @@ from rdfstats.model.meta import Session, Base
 from sqlalchemy import schema, types, Table
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.dialects import postgresql
 
 from formalchemy import FieldSet
 from formalchemy import validators
@@ -56,7 +57,7 @@ class _BaseMixin(object):
 
 class RDFDoc(Base, _BaseMixin):
     __tablename__ ='rdfdoc'
-    
+
     id = schema.Column(types.Integer, schema.Sequence('rdfdoc_sq_id', optional=True), primary_key=True)
     uri = schema.Column(types.Text())
     name = schema.Column(types.Unicode(255)) # (as in ckan)
@@ -68,7 +69,7 @@ class RDFDoc(Base, _BaseMixin):
                         use_alter=True, name='fk_rdfdoc_current_stats_id'))
     file_last_modified = schema.Column(types.DateTime())
     in_datahub = schema.Column(types.Boolean)
-    
+
     def reset_current_stats_and_worker(self):
         if self.current_stats is not None:
             self.current_stats.prep_delete()
@@ -84,7 +85,7 @@ class RDFDoc(Base, _BaseMixin):
 
 class WorkerProc(Base, _BaseMixin):
     __tablename__ = 'worker_proc'
-    
+
     id = schema.Column(types.Integer, schema.Sequence('worker_proc_sq_id', optional=True), primary_key=True)
     pid = schema.Column(types.Integer())
     rdfdoc_id = schema.Column(types.Integer(), schema.ForeignKey('rdfdoc.id'), nullable=False)
@@ -196,6 +197,15 @@ class Link(Base, _BaseMixin):
     s_ns = schema.Column(types.Text())
     o_ns = schema.Column(types.Text())
     stat_result = association_proxy('stat_result_assocs', 'stat_result', creator=lambda s: StatResult(link=s))
+
+class PropertyLabeled(Base, _BaseMixin):
+    __tablename__ = 'rdf_property_label'
+    id = schema.Column(types.Integer, schema.Sequence('rdf_property_label_id_seq', optional=True), primary_key=True)
+    label_en = schema.Column(types.Text())
+    uri = schema.Column(types.Text())
+    count = schema.Column(types.Integer)
+    rdf_property_id = schema.Column(types.Integer)
+    label_en_index_col = schema.Column(postgresql.TSVECTOR)
 
 # formalchemy
 RDFDoc_fa = FieldSet(RDFDoc)
