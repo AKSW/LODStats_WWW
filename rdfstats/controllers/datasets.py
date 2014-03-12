@@ -49,6 +49,8 @@ class DatasetsController(BaseController):
         # url('dataset', id=ID)
 
     def show(self, id, format='html'):
+        """GET /datasets/id: Show a specific item"""
+        # url('dataset', id=ID)
         import re
         id = re.sub("http:/", "http://", id)
         #try:
@@ -57,8 +59,6 @@ class DatasetsController(BaseController):
         return json.dumps(url)
         #except:
             #return '{}'
-        """GET /datasets/id: Show a specific item"""
-        # url('dataset', id=ID)
 
     def edit(self, id, format='html'):
         """GET /datasets/id/edit: Form to edit an existing item"""
