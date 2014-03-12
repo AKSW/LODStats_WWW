@@ -42,7 +42,7 @@ class DatatypesController(BaseController):
         # url('datatypes')
         # datatypes = Session.query(model.RDFDatatype).join(model.RDFDatatypeStat).join(model.StatResult).filter(
         #     model.StatResult.current_of!=None)
-        
+
         datatypes = Session.query(model.RDFDatatype.uri, model.RDFDatatype.id,
                                     func.sum(model.RDFDatatypeStat.count),
                                     func.count(model.StatResult.id))\
@@ -119,7 +119,7 @@ class DatatypesController(BaseController):
             abort(404)
         if c.datatype is None:
             abort(404)
-        ds=Session.query(model.RDFDatatypeStat).join(model.StatResult, model.StatResult.current_of).filter(
+        ds=Session.query(model.RDFDatatypeStat).join(model.StatResult).join(model.StatResult.current_of).filter(
             and_(
                 model.RDFDatatypeStat.rdf_datatype==c.datatype,
                 model.StatResult.current_of!=None)).order_by(model.RDFDoc.name).all()

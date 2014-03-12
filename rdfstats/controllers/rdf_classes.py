@@ -122,7 +122,7 @@ class RdfClassesController(BaseController):
             abort(404)
         if c.rdf_class is None:
             abort(404)
-        c.cs=Session.query(model.RDFClassStat).join(model.StatResult, model.StatResult.current_of).filter(
+        c.cs=Session.query(model.RDFClassStat).join(model.StatResult).join(model.StatResult.current_of).filter(
             and_(
                 model.RDFClassStat.rdf_class==c.rdf_class,
                 model.StatResult.current_of!=None)).order_by(model.RDFDoc.name).all()

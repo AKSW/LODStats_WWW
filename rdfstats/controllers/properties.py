@@ -120,7 +120,7 @@ class PropertiesController(BaseController):
             abort(404)
         if c.prop is None:
             abort(404)
-        ps=Session.query(model.RDFPropertyStat).join(model.StatResult, model.StatResult.current_of).filter(
+        ps=Session.query(model.RDFPropertyStat).join(model.StatResult).join(model.StatResult.current_of).filter(
             and_(
                 model.RDFPropertyStat.rdf_property==c.prop,
                 model.StatResult.current_of!=None)).order_by(model.RDFDoc.name).all()

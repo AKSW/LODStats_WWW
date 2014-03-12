@@ -115,7 +115,7 @@ class LinksController(BaseController):
             abort(404)
         if c.link is None:
             abort(404)
-        c.ls=Session.query(model.LinkStat).join(model.StatResult, model.StatResult.current_of).filter(
+        c.ls=Session.query(model.LinkStat).join(model.StatResult).join(model.StatResult.current_of).filter(
             and_(
                 model.LinkStat.link==c.link,
                 model.StatResult.current_of!=None)).order_by(model.RDFDoc.name).all()

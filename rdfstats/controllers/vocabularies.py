@@ -114,7 +114,7 @@ class VocabulariesController(BaseController):
             abort(404)
         if c.vocab is None:
             abort(404)
-        vs=Session.query(model.RDFVocabStat).join(model.StatResult, model.StatResult.current_of).filter(
+        vs=Session.query(model.RDFVocabStat).join(model.StatResult).join(model.StatResult.current_of).filter(
             and_(
                 model.RDFVocabStat.vocab==c.vocab,
                 model.StatResult.current_of!=None)).order_by(model.RDFDoc.name).all()

@@ -43,7 +43,7 @@ class LanguagesController(BaseController):
         c.languages = Session.query(model.Language).join(model.LanguageStat).join(model.StatResult).filter(
             model.StatResult.current_of!=None).order_by(model.Language.code).all()
         c.count = len(c.languages)
-        
+
         languages = Session.query(model.Language.code, model.Language.id, func.sum(model.LanguageStat.count),
                                     func.count(model.StatResult.id))\
                                 .join(model.LanguageStat).join(model.StatResult)\
@@ -116,10 +116,10 @@ class LanguagesController(BaseController):
         try:
             c.language = Session.query(model.Language).get(int(id))
         except ValueError, e:
-            abort(404)        
+            abort(404)
         if c.language is None:
             abort(404)
-        ls=Session.query(model.LanguageStat).join(model.StatResult, model.StatResult.current_of).filter(
+        ls=Session.query(model.LanguageStat).join(model.StatResult).join(model.StatResult.current_of).filter(
             and_(
                 model.LanguageStat.language==c.language,
                 model.StatResult.current_of!=None)).order_by(model.RDFDoc.name).all()
