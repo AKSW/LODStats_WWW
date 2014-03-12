@@ -49,16 +49,16 @@ class DatasetsController(BaseController):
         # url('dataset', id=ID)
 
     def show(self, id, format='html'):
-        import re
-        id = re.sub("http:/", "http://", id)
-        #try:
-        dataset = Session.query(model.RDFDoc).filter(model.RDFDoc.uri==id).one()
-        url = h.url(controller="rdfdocs", action="show", id=dataset.id, qualified=True)
-        return json.dumps(url)
-        #except:
-            #return '{}'
         """GET /datasets/id: Show a specific item"""
         # url('dataset', id=ID)
+        import re
+        id = re.sub("http:/", "http://", id)
+        try:
+            dataset = Session.query(model.RDFDoc).filter(model.RDFDoc.uri==id).one()
+            output_url = h.url(controller="rdfdocs", action="show", id=dataset.id, qualified=True)
+            return json.dumps(output_url)
+        except:
+            return json.dumps('')
 
     def edit(self, id, format='html'):
         """GET /datasets/id/edit: Form to edit an existing item"""
