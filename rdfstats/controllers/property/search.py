@@ -51,6 +51,7 @@ class SearchController(BaseController):
     def show(self, id, format='html'):
         """GET /property/search/id: Show a specific item"""
         # url('property_searchone', id=ID)
+        response.headers['Access-Control-Allow-Origin'] = "*"
         searchterms = id.split(' ')
         searchterms = '|'.join(searchterms)
         q = Session.query(model.PropertyLabeled).filter('label_en_index_col ' \
@@ -58,11 +59,12 @@ class SearchController(BaseController):
         q = q.params(terms=searchterms)
         q = q.order_by('count DESC')
         q = q.limit(10)
-        result = []
+        result = {}
+        result['suggestions'] = []
         for row in q:
             object = {'uri': row.uri,
                       'label_en': row.label_en}
-            result.append(object)
+            result['suggestions'].append(object)
         return json.dumps(result)
 
     def edit(self, id, format='html'):
