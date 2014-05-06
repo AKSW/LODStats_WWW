@@ -31,6 +31,7 @@ def make_map(config):
     map.resource('searchone', 'search', controller='property/search',
                  path_prefix='/property', name_prefix='property_')
     map.connect('/datasets/*id', controller='datasets', action='show')
+    map.connect('/vocab/search/*id', controller='vocab/search', action='show')
     map.connect('/property/search/*query', controller='property/search', action='show')
     map.connect('/', controller='homepage', action='home')
     map.connect('/stats', controller='homepage', action='stats')
