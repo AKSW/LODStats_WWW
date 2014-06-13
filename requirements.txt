@@ -1,0 +1,6 @@
+pastescript
+sqlalchemy
+pylons
+formalchemy
+psycopg2
+ckanclient

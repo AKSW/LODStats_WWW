@@ -7,25 +7,32 @@ automatically be synced from a CKAN (http://ckan.org/) instance.
 Installation and Setup
 ======================
 
-Extract (fetch/move) to ~/lodstats_www:
-    $ git clone https://github.com/jandemter/lodstats_www lodstats_www
+Install LODStats:
+    https://github.com/AKSW/LODStats
+
+Python virtualenv:
+    $ workon lodstats
+    $ cdvirtualenv
+
+Check for altered prompt with the virtual environment and change directory
+    (lodstats)$ cd src
+
+Copy RDF.py to the local installation:
+    $ dpkg-query -L python-librdf
+    $ mkdir RDF
+    $ cp /usr/lib/python2.7/dist-packages/Redland.so RDF/
+    $ cp /usr/lib/python2.7/dist-packages/RDF.py RDF/
+    $ add2virtualenv ./RDF
+
+Clone git repository:
+    (lodstats)$ git clone https://github.com/AKSW/LODStats_WWW.git && cd LODStats_WWW
 
 Install dependencies:
-    $ sudo apt-get install python-librdf postgresql python-psycopg2
+    (lodstats-env)$ pip install --pre -r requirements.txt
 
 Create DB:
     $ sudo -u postgres createuser -S -D -R -P lodstats
     $ sudo -u postgres createdb -O lodstats lodstats
-
-Python virtualenv:
-    $ virtualenv --system-site-packages pyenv-lodstats
-    $ . pyenv-lodstats/bin/activate
-
-Check for altered prompt with the virtual environment and change directory
-    (lodstats-env)$ cd lodstats_www
-
-Install dependencies:
-    (lodstats-env)$ pip install -r pip-requirements.txt
 
 Run setup.py egg_info:
 

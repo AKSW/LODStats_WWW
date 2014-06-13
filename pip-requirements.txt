@@ -1,7 +1,0 @@
-lodstats
-ipython==0.10
-pylons
-sqlalchemy==0.6.8
-formalchemy==1.4.2
-ckanclient
-psycopg2
