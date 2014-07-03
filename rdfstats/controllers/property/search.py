@@ -9,6 +9,8 @@ from rdfstats import model
 
 import json
 
+from copy import copy
+
 log = logging.getLogger(__name__)
 
 class SearchController(BaseController):
@@ -25,6 +27,76 @@ class SearchController(BaseController):
     def create(self):
         """POST /property/search: Create a new item"""
         # url('property_search')
+        #POST here JSON with all the classes extracted
+        headers = json.loads(request.params['headers'])
+        entities = json.loads(request.params['entities']) 
+
+        headersWithSuggestions = self._getSuggestionsForHeaders(headers)
+        rankedHeadersWithSuggestions = self._rankSuggestionsForHeaders(headersWithSuggestions, entities)
+        return json.dumps(rankedHeadersWithSuggestions)
+
+    def _rankSuggestionsForHeaders(self, headersWithSuggestions, entities):
+        headersWithSuggestionsLocal = copy(headersWithSuggestions)
+        for header in headersWithSuggestionsLocal:
+            headerName = header.keys()[0]
+            headerBody = header[headerName]
+            for headerItem in headerBody:
+                suggestions = headerItem[2]
+                for suggestion in suggestions:
+                    suggestion['rank'] = self.rankSuggestionLodstats(suggestion['uri'], entities)
+
+        return headersWithSuggestionsLocal
+
+    def rankSuggestionLodstats(self, suggestionUri, entities):
+        propertyQuery = """SELECT stat_result_id 
+                   FROM rdf_property_stat, rdf_property 
+                   WHERE rdf_property.id=rdf_property_stat.rdf_property_id 
+                   AND rdf_property.uri='%s';""" % suggestionUri
+        q = Session.execute(propertyQuery)
+        propertyDatasets = set()
+        for row in q:
+            propertyDatasets.add(row[0])
+
+        entitiesDatasets = set()
+        for entityUrl in entities:
+            classQuery = """SELECT stat_result_id
+                            FROM rdf_class_stat_result, rdf_class
+                            WHERE rdf_class_stat_result.rdf_class_id=rdf_class.id 
+                            AND rdf_class.uri='%s';""" % entityUrl
+            q = Session.execute(classQuery)
+            for row in q:
+                entitiesDatasets.add(row[0])
+            propertyQuery = """SELECT stat_result_id 
+                       FROM rdf_property_stat, rdf_property 
+                       WHERE rdf_property.id=rdf_property_stat.rdf_property_id 
+                       AND rdf_property.uri='%s';""" % entityUrl
+            q = Session.execute(propertyQuery)
+            for row in q:
+                entitiesDatasets.add(row[0])
+                
+        common = propertyDatasets.intersection(entitiesDatasets)
+        if(len(common) > 0):
+            print suggestionUri
+        return len(common)
+
+    def _getSuggestionsForHeaders(self, headers):
+        suggestions = []        
+        for header in headers:
+            headerName = header.keys()[0]
+            headerBody = header[headerName]
+            headerSuggestions = {headerName: []}
+            for (num, headerItem) in headerBody:
+                headerItemSuggestions = (num, headerItem, [])
+                q = self._getProperties(headerItem)
+                for row in q:
+                    suggestion = {'rdf_property_id': row.rdf_property_id,
+                                  'count': row.count,
+                                  'uri': row.uri,
+                                  'label_en': row.label_en}
+                    headerItemSuggestions[2].append(suggestion)
+                headerSuggestions[headerName].append(headerItemSuggestions)
+            suggestions.append(headerSuggestions)
+        return suggestions
 
     def new(self, format='html'):
         """GET /property/search/new: Form to create a new item"""
@@ -52,20 +124,28 @@ class SearchController(BaseController):
         """GET /property/search/id: Show a specific item"""
         # url('property_searchone', id=ID)
         response.headers['Access-Control-Allow-Origin'] = "*"
-        searchterms = id.split(' ')
-        searchterms = '|'.join(searchterms)
-        q = Session.query(model.PropertyLabeled).filter('label_en_index_col ' \
-                                                        '@@ to_tsquery(:terms)')
-        q = q.params(terms=searchterms)
-        q = q.order_by('count DESC')
-        q = q.limit(10)
+        result = self._getPropertiesJson(id)
+        return json.dumps(result)
+
+    def _getPropertiesJson(self, searchString, limit=100):
+        q = self._getProperties(searchString, limit)
         result = {}
         result['suggestions'] = []
         for row in q:
             object = {'uri': row.uri,
                       'label_en': row.label_en}
             result['suggestions'].append(object)
-        return json.dumps(result)
+        return result
+
+    def _getProperties(self, searchString, limit=100):
+        searchterms = searchString.split(' ')
+        searchterms = '|'.join(searchterms)
+        q = Session.query(model.PropertyLabeled).filter('label_en_index_col ' \
+                                                        '@@ to_tsquery(:terms)')
+        q = q.params(terms=searchterms)
+        q = q.order_by('count DESC')
+        q = q.limit(limit)
+        return q
 
     def edit(self, id, format='html'):
         """GET /property/search/id/edit: Form to edit an existing item"""
