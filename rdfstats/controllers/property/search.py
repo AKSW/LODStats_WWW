@@ -11,6 +11,10 @@ import json
 
 from copy import copy
 
+import cPickle as pickle
+import uuid
+import os.path
+
 log = logging.getLogger(__name__)
 
 class SearchController(BaseController):
@@ -36,18 +40,37 @@ class SearchController(BaseController):
         return json.dumps(rankedHeadersWithSuggestions)
 
     def _rankSuggestionsForHeaders(self, headersWithSuggestions, entities):
-        headersWithSuggestionsLocal = copy(headersWithSuggestions)
-        for header in headersWithSuggestionsLocal:
+        headersWithSuggestionsOut = list()
+        for num, header in enumerate(headersWithSuggestions):
             headerName = header.keys()[0]
             headerBody = header[headerName]
+
+            headerWithSuggestionsOut = dict()
+            headerWithSuggestionsOut[headerName] = list()
             for headerItem in headerBody:
+                headerItemOut = list()
+                headerItemOut.append(headerItem[0])
+                headerItemOut.append(headerItem[1])
                 suggestions = headerItem[2]
                 for suggestion in suggestions:
-                    suggestion['rank'] = self.rankSuggestionLodstats(suggestion['uri'], entities)
+                    suggestion['rank'] = self._rankSuggestionLodstats(suggestion['uri'], entities)
+                #sort by rank
+                headerItemOut.append(sorted(suggestions, key=lambda k: k['rank'], reverse=True))
+                headerWithSuggestionsOut[headerName].append(headerItemOut)
+            headersWithSuggestionsOut.append(headerWithSuggestionsOut)
 
-        return headersWithSuggestionsLocal
+        return headersWithSuggestionsOut
 
-    def rankSuggestionLodstats(self, suggestionUri, entities):
+    def _rankSuggestionLodstats(self, suggestionUri, entities):
+        #The most time consuming - implement caching here
+        #just cache to /tmp for now
+        cacheId = uuid.uuid5(uuid.NAMESPACE_URL, suggestionUri.join(sorted(entities)).encode('utf-8'))
+        cachePath = '/tmp/'
+        cacheNamespace = 'suggestionsCache'
+        cacheEntry = str(cachePath) + str(cacheNamespace) + str(cacheId)
+        if(os.path.exists(cacheEntry)):
+            return pickle.load(open(cacheEntry, 'rb'))
+
         propertyQuery = """SELECT stat_result_id 
                    FROM rdf_property_stat, rdf_property 
                    WHERE rdf_property.id=rdf_property_stat.rdf_property_id 
@@ -75,8 +98,7 @@ class SearchController(BaseController):
                 entitiesDatasets.add(row[0])
                 
         common = propertyDatasets.intersection(entitiesDatasets)
-        if(len(common) > 0):
-            print suggestionUri
+        pickle.dump(len(common), open(cacheEntry, 'wb'), protocol=pickle.HIGHEST_PROTOCOL)
         return len(common)
 
     def _getSuggestionsForHeaders(self, headers):
