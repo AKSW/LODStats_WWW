@@ -64,7 +64,11 @@ class SearchController(BaseController):
     def _rankSuggestionLodstats(self, suggestionUri, entities):
         #The most time consuming - implement caching here
         #just cache to /tmp for now
-        cacheId = uuid.uuid5(uuid.NAMESPACE_URL, suggestionUri.join(sorted(entities)).encode('utf-8'))
+        onlyclasses = set()
+        for entity in entities:
+            onlyclasses.add(entity['class'])
+        onlyclasses = list(onlyclasses)
+        cacheId = uuid.uuid5(uuid.NAMESPACE_URL, suggestionUri.join(sorted(onlyclasses)).encode('utf-8'))
         cachePath = '/tmp/'
         cacheNamespace = 'suggestionsCache'
         cacheEntry = str(cachePath) + str(cacheNamespace) + str(cacheId)
@@ -81,7 +85,7 @@ class SearchController(BaseController):
             propertyDatasets.add(row[0])
 
         entitiesDatasets = set()
-        for entityUrl in entities:
+        for entityUrl in onlyclasses:
             classQuery = """SELECT stat_result_id
                             FROM rdf_class_stat_result, rdf_class
                             WHERE rdf_class_stat_result.rdf_class_id=rdf_class.id 
@@ -149,7 +153,7 @@ class SearchController(BaseController):
         result = self._getPropertiesJson(id)
         return json.dumps(result)
 
-    def _getPropertiesJson(self, searchString, limit=100):
+    def _getPropertiesJson(self, searchString, limit=20):
         q = self._getProperties(searchString, limit)
         result = {}
         result['suggestions'] = []
@@ -159,7 +163,7 @@ class SearchController(BaseController):
             result['suggestions'].append(object)
         return result
 
-    def _getProperties(self, searchString, limit=100):
+    def _getProperties(self, searchString, limit=20):
         searchterms = searchString.split(' ')
         searchterms = '|'.join(searchterms)
         q = Session.query(model.PropertyLabeled).filter('label_en_index_col ' \
