@@ -225,13 +225,10 @@ class DoStats(Command):
             stat_result.typed_subjects = stats_results['typedsubjects']['count']
             stat_result.labeled_subjects = stats_results['labeledsubjects']['count']
             # hierarchy depth
-            print stats_results['propertyhierarchydepth']
             if stats_results['classhierarchydepth']['count'] > 0:
-                stat_result.class_hierarchy_depth = stats_results['classhierarchydepth']['count'][max(rdfdocstats.stats_results['classhierarchydepth']['count'],
-                    key=stats_results['classhierarchydepth']['count'].get)]
+                stat_result.class_hierarchy_depth = stats_results['classhierarchydepth']['count']
             if stats_results['propertyhierarchydepth']['count'] > 0:
-                stat_result.property_hierarchy_depth = stats_results['propertyhierarchydepth']['count'][max(stats_results['propertyhierarchydepth']['count'],
-                    key=stats_results['propertyhierarchydepth']['count'].get)]
+                stat_result.property_hierarchy_depth = stats_results['propertyhierarchydepth']['count']
             # averages
             stat_result.properties_per_entity = stats_results['propertiesperentity']['avg']
             stat_result.string_length_typed = stats_results['stringlength']['avg_typed']
