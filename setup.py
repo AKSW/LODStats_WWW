@@ -35,16 +35,8 @@ setup(
     main = pylons.util:PylonsInstaller
 
     [paste.paster_command]
-    rdfstats_runner = rdfstats.commands.rdfstats_runner:DoStats
-    rdfstats_custom_runner = rdfstats.commands.rdfstats_custom_runner:DoStats
-    rdf_ckan_update = rdfstats.commands.rdf_ckan_update:DoUpdate
-    admin = rdfstats.commands.admin:DoAdmin
-    clean_workers = rdfstats.commands.clean_workers:DoCleanWorkers
-    clean_workers_custom = rdfstats.commands.clean_workers_custom:DoCleanWorkers
-    load_from_pickled = rdfstats.commands.load_from_pickled:DoLoadFromPickled
-    db_manipulation = rdfstats.commands.db_manipulation:DoDB
-    update_from_file = rdfstats.commands.update_from_file:UpdateFromFile
     process_all_datasets = rdfstats.commands.process_all_datasets:ProcessAllDatasets
     lodstats_listener = rdfstats.commands.lodstats_listener:LodstatsListener
+    debug = rdfstats.commands.debugger:Debugger
     """,
 )

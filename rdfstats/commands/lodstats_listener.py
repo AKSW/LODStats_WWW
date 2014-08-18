@@ -102,6 +102,9 @@ class LodstatsListener(Command):
             Session.commit()
             sys.exit(0)
 
+    def _get_dataset(self, id):
+        return Session.query(model.RDFDoc).filter(model.RDFDoc.id==id).first()
+
     def process_dataset(self, id):
         self.logging_file_config(config_file)
         log = logging.getLogger(__name__)
@@ -112,7 +115,7 @@ class LodstatsListener(Command):
         signal.signal(signal.SIGINT, self.term_handler)
         signal.signal(signal.SIGTERM, self.term_handler)
 
-        rdfdoc_to_do = Session.query(model.RDFDoc).filter(model.RDFDoc.id==id).first()
+        rdfdoc_to_do = self._get_dataset(id)
         if rdfdoc_to_do is None:
             log.warning("rdfdoc_to_do is None")
             return 0
