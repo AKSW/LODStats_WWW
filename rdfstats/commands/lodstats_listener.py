@@ -1,5 +1,5 @@
 """
-Copyright 2012 Jan Demter <jan@demter.de>
+Copyright 2014 Ivan Ermilov <iermilov@informatik.uni-leipzig.de>
 
 This file is part of LODStatsWWW.
 
@@ -34,17 +34,40 @@ import sys
 import signal
 import os
 import logging
+log = logging.getLogger(__name__)
 
 from lodstats import RDFStats
 from lodstats.stats import lodstats_old as lodstats_stats
 from lodstats.exceptions import NotModified
 
-class DoStats(Command):
+#messaging
+from csv2rdf.messaging import Messaging
+import json
+
+class LodstatsListener(Command):
     # Parser configuration
-    summary = "compute stats for RDF data, get URI from DB"
-    usage = "paster-2.6 --plugin=Rdfstats rdfstats_runner"
+    summary = "Administration functions for LODStats"
+    usage = "paster-2.6 --plugin=Rdfstats admin"
     group_name = "rdfstats"
     parser = Command.standard_parser(verbose=False)
+    
+    def command(self):
+        exchange = "lodstats_datasets_exchange"
+        queue = "lodstats_datasets_queue"
+
+        message_broker = Messaging()
+        message_broker.declare_direct_exchange(exchange)
+        message_broker.declare_queue(queue)
+        message_broker.bind_exchange_to_queue(exchange, queue)
+        print "Waiting for messages..."
+        message_broker.receive_messages_with_ack(self.messaging_callback, queue)
+
+    def messaging_callback(self, ch, method, properties, body):
+        log.debug("[x] Received %r" % (body,))
+        payload = json.loads(body)
+        id = payload["id"]
+        self.process_dataset(id)
+        ch.basic_ack(delivery_tag = method.delivery_tag)
 
     def callback_stats(self, rdfdocstat):
         no_of_statements = rdfdocstat.get_no_of_triples()
@@ -65,7 +88,6 @@ class DoStats(Command):
         Session.commit()
 
     def term_handler(self, signum, frame):
-        log = logging.getLogger(__name__)
         log.debug("exiting through term handler")
         Session.rollback()
         if self.rdfdoc_to_do is None or self.rdfdoc_to_do.worked_on == False:
@@ -80,8 +102,7 @@ class DoStats(Command):
             Session.commit()
             sys.exit(0)
 
-    def command(self):
-
+    def process_dataset(self, id):
         self.logging_file_config(config_file)
         log = logging.getLogger(__name__)
 
@@ -91,26 +112,7 @@ class DoStats(Command):
         signal.signal(signal.SIGINT, self.term_handler)
         signal.signal(signal.SIGTERM, self.term_handler)
 
-        # do not spawn more than two workers
-        #number_of_workers = Session.query(model.WorkerProc).with_lockmode('read').count()
-        #if number_of_workers >= 7:
-	#    print "Number of workers exceeded!"
-        #    return 0
-
-
-        four_weeks_ago = datetime.today()-timedelta(weeks=1)
-        #rdfdoc_to_do = Session.query(model.RDFDoc).filter(
-                    #and_(
-                        #model.RDFDoc.worked_on==False,
-                        #model.RDFDoc.in_datahub==True,
-                        #or_(model.RDFDoc.last_updated<four_weeks_ago,
-                            #model.RDFDoc.last_updated == None))).with_lockmode('update')\
-                    #.order_by(model.RDFDoc.last_updated).first()
-        rdfdoc_to_do = Session.query(model.RDFDoc).filter(
-                    and_(
-                        model.RDFDoc.worked_on==False,
-                        model.RDFDoc.in_datahub==True)).with_lockmode('update')\
-                    .order_by(model.RDFDoc.last_updated).first()
+        rdfdoc_to_do = Session.query(model.RDFDoc).filter(model.RDFDoc.id==id).first()
         if rdfdoc_to_do is None:
             log.warning("rdfdoc_to_do is None")
             return 0
@@ -292,9 +294,4 @@ class DoStats(Command):
         stat_result.last_updated = datetime.now()
         Session.delete(self.worker_proc)
         Session.commit()
-	print "Done!"
-
-
-if __name__ == "__main__":
-    do_stats = DoStats(None)
-    do_stats.command()
+	log.debug("Done!")

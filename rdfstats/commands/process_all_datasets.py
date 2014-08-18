@@ -1,6 +1,5 @@
-import pdb
 """
-Copyright 2012 Jan Demter <jan@demter.de>
+Copyright 2014 Ivan Ermilov <iermilov@informatik.uni-leipzig.de>
 
 This file is part of LODStatsWWW.
 
@@ -29,9 +28,11 @@ load_environment(conf.global_conf, conf.local_conf)
 from rdfstats.model.meta import Session
 from rdfstats import model
 
-dataset_id = 1440
+#Messaging - using module from csv2rdf-wiki
+from csv2rdf.messaging import Messaging
+import json
 
-class DoCleanWorkers(Command):
+class ProcessAllDatasets(Command):
     # Parser configuration
     summary = "Administration functions for LODStats"
     usage = "paster-2.6 --plugin=Rdfstats admin"
@@ -39,20 +40,16 @@ class DoCleanWorkers(Command):
     parser = Command.standard_parser(verbose=False)
     
     def command(self):
-
-        rdfdoc_to_do = Session.query(model.RDFDoc).filter(model.RDFDoc.id == dataset_id).with_lockmode('update')\
-                    .order_by(model.RDFDoc.last_updated).first()
-        if rdfdoc_to_do is None:
-            return 0
-
-        print rdfdoc_to_do.reset_current_stats_and_worker()
-        #for entry in rdfdoc:
-            #entry.worked_on = False
-        
-        #worker_proc = Session.query(model.WorkerProc).all()
-        #print worker_proc    
-
-        #for wp in worker_proc:
-            #Session.delete(wp)
-
-        #Session.commit()
+        exchange = "lodstats_datasets_exchange"
+        queue = "lodstats_datasets_queue"
+        message_broker = Messaging()
+        message_broker.declare_direct_exchange(exchange)
+        message_broker.declare_queue(queue)
+        message_broker.bind_exchange_to_queue(exchange, queue)
+        rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).all()
+        for rdfdoc in rdfdocs:
+            dataset = {
+                    'id': rdfdoc.id,
+                    }
+            message = json.dumps(dataset)
+            message_broker.send_message_to_queue(queue, message)
