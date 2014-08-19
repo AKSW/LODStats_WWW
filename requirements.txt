@@ -4,3 +4,4 @@ pylons
 formalchemy
 psycopg2
 ckanclient
+pika
