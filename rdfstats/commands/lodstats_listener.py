@@ -56,11 +56,11 @@ class LodstatsListener(Command):
         queue = "lodstats_datasets_queue"
 
         message_broker = Messaging()
-        message_broker.declare_direct_exchange(exchange)
-        message_broker.declare_queue(queue)
-        message_broker.bind_exchange_to_queue(exchange, queue)
+        message_broker.declareDirectExchange(exchange)
+        message_broker.declareQueue(queue)
+        message_broker.bindExchangeToQueue(exchange, queue)
         print "Waiting for messages..."
-        message_broker.receive_messages_with_ack(self.messaging_callback, queue)
+        message_broker.receiveMessagesWithAck(self.messaging_callback, queue)
 
     def messaging_callback(self, ch, method, properties, body):
         log.debug("[x] Received %r" % (body,))
