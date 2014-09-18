@@ -31,7 +31,7 @@ app_instance_uuid = ${app_instance_uuid}
 #beaker.session.data_dir = %(here)s/data/sessions
 
 # SQLAlchemy database URL
-sqlalchemy.url = postgres://lodstats:REPLACE_WITH_PASSWORD@localhost/lodstats
+sqlalchemy.url = postgres://lodstats:REPLACE_WITH_PASSWORD@REPLACE_WITH_THE_HOST/lodstats
 
 # WARNING: *THE LINE BELOW MUST BE UNCOMMENTED ON A PRODUCTION ENVIRONMENT*
 # Debug mode will enable the interactive debugging tool, allowing ANYONE to
