@@ -43,13 +43,13 @@ class ProcessAllDatasets(Command):
         exchange = "lodstats_datasets_exchange"
         queue = "lodstats_datasets_queue"
         message_broker = Messaging()
-        message_broker.declare_direct_exchange(exchange)
-        message_broker.declare_queue(queue)
-        message_broker.bind_exchange_to_queue(exchange, queue)
+        message_broker.declareDirectExchange(exchange)
+        message_broker.declareQueue(queue)
+        message_broker.bindExchangeToQueue(exchange, queue)
         rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).all()
         for rdfdoc in rdfdocs:
             dataset = {
                     'id': rdfdoc.id,
                     }
             message = json.dumps(dataset)
-            message_broker.send_message_to_queue(queue, message)
+            message_broker.sendMessageToQueue(queue, message)
