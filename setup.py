@@ -36,6 +36,7 @@ setup(
 
     [paste.paster_command]
     process_all_datasets = rdfstats.commands.process_all_datasets:ProcessAllDatasets
+    process_by_id = rdfstats.commands.process_by_id:ProcessById
     lodstats_listener = rdfstats.commands.lodstats_listener:LodstatsListener
     debug = rdfstats.commands.debugger:Debugger
     """,
