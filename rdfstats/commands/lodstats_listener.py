@@ -68,6 +68,7 @@ class LodstatsListener(Command):
         id = payload["id"]
         self.process_dataset(id)
         ch.basic_ack(delivery_tag = method.delivery_tag)
+        ch.stop_consuming()
 
     def callback_stats(self, rdfdocstat):
         no_of_statements = rdfdocstat.get_no_of_triples()
