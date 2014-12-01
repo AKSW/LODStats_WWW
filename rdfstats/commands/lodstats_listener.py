@@ -66,8 +66,9 @@ class LodstatsListener(Command):
         log.debug("[x] Received %r" % (body,))
         payload = json.loads(body)
         id = payload["id"]
-        self.process_dataset(id)
+	#Acknowledge the message before processing - fails for some reason if after processing (timeouts?)
         ch.basic_ack(delivery_tag = method.delivery_tag)
+        self.process_dataset(id)
         ch.stop_consuming()
 
     def callback_stats(self, rdfdocstat):
