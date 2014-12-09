@@ -4,4 +4,4 @@
 BACKUPDIR=/PATHTO/Dropbox/Public/lodstats-dumps
 NOW=$(date +"%m-%d-%Y")
 BACKUPFILE="$BACKUPDIR/$NOW.dump"
-echo "sudo -u postgres pg_dump -Fc lodstats > $BACKUPFILE"
+sudo -u postgres pg_dump -Fc lodstats > $BACKUPFILE

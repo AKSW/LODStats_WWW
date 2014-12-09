@@ -1,0 +1,7 @@
+#!/bin/bash
+
+BACKUPDIR=/PATHTO/Dropbox/Public/lodstats-dumps
+FILENAME=$1
+BACKUPFILE="$BACKUPDIR/$FILENAME"
+#DROPS AND CREATES DATABASE
+sudo -u postgres pg_restore --clean --create -d lodstats -Fc $BACKUPFILE
