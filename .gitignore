@@ -25,3 +25,4 @@ rdfstats.egg-info/*
 .noseids
 *~
 pyenv/
+backup-scripts/backup.sh
