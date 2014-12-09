@@ -37,7 +37,7 @@ import logging
 
 import ckanclient
 
-class DoUpdate(Command):
+class LodstatsUpdate(Command):
     # Parser configuration
     summary = "get/update RDF packages from CKAN"
     usage = "paster-2.6 --plugin=Rdfstats rdf_ckan_update"
