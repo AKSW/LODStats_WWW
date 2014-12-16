@@ -33,7 +33,7 @@ from rdfstats.commands.lodstats_listener import LodstatsListener
 
 class Debugger(LodstatsListener):
     # Parser configuration
-    summary = "Administration functions for LODStats"
+    summary = "Debugger - edit rdfstats/commands/debugger.py and run the command"
     usage = "paster-2.6 --plugin=Rdfstats admin"
     group_name = "rdfstats"
     parser = Command.standard_parser(verbose=False)

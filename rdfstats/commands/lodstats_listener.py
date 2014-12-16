@@ -46,7 +46,7 @@ import json
 
 class LodstatsListener(Command):
     # Parser configuration
-    summary = "Administration functions for LODStats"
+    summary = "RabbitMQ listener. Receives messages and processes datasets."
     usage = "paster-2.6 --plugin=Rdfstats admin"
     group_name = "rdfstats"
     parser = Command.standard_parser(verbose=False)

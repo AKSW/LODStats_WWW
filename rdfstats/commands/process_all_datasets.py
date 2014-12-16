@@ -34,7 +34,7 @@ import json
 
 class ProcessAllDatasets(Command):
     # Parser configuration
-    summary = "Administration functions for LODStats"
+    summary = "Get all datasets ids from DB and push messages to process them to the queue."
     usage = "paster-2.6 --plugin=Rdfstats admin"
     group_name = "rdfstats"
     parser = Command.standard_parser(verbose=False)
