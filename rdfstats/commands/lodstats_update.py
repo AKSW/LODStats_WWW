@@ -63,23 +63,14 @@ class LodstatsUpdate(Command):
         number_of_workers = Session.query(model.WorkerProc).with_lockmode('read').count()
         if number_of_workers >= 2:
             return 0
-        
-        ckan = ckanclient.CkanClient(base_location=conf['ckan.base']+'api', api_key=conf['ckan.api_key'])
-        
-        error = None
-        try:
-            package_list = ckan.package_register_get()
-        except Exception, errorstr:
-            log.error(str(errorstr))
-            sys.exit(23)
-        
-        # check for orphaned local pkgs
-        all_local_pkgs = Session.query(model.RDFDoc).all()
+
+        # check for orphaned local packages
+        allLocalPackages = Session.query(model.RDFDoc).all()
         for pkg in all_local_pkgs:
             if pkg.name not in package_list:
                 log.debug("%s is gone and will be deleted" % pkg.name)
-                Session.delete(pkg)
-                Session.commit()
+                #Session.delete(pkg)
+                #Session.commit()
             
         for package_name in package_list:
             try:

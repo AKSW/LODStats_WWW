@@ -40,5 +40,6 @@ setup(
     lodstats_listener = rdfstats.commands.lodstats_listener:LodstatsListener
     debug = rdfstats.commands.debugger:Debugger
     lodstats_update = rdfstats.commands.lodstats_update:LodstatsUpdate
+    lodstats_sync = rdfstats.commands.synchronize_ckan:SynchronizeCkan
     """,
 )
