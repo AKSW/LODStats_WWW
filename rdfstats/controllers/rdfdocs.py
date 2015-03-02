@@ -45,7 +45,7 @@ class RdfdocsController(BaseController):
     def index(self, format='html'):
         """GET /rdfdocs: All items in the collection"""
         # url('rdfdocs')
-        rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats)
+        rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats)
         c.query_string = '?'
         c.search = ''
         if request.GET.has_key('search'):
@@ -97,13 +97,13 @@ class RdfdocsController(BaseController):
         return render('/rdfdoc/index.html')
 
     def valid_and_available(self):
-        c.rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(and_(model.StatResult.triples > 0, model.RDFDoc.format != 'sparql')).all()
+        c.rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(and_(model.StatResult.triples > 0, model.RDFDoc.format != 'sparql')).all()
         response.content_type = 'text/plain'
         return render('/rdfdoc/txtlist.txt')
 
     def void(self):
         """send VoID of every dataset in a ZIP file"""
-        rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(and_(model.StatResult.triples > 0, model.RDFDoc.format != 'sparql'))
+        rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(and_(model.StatResult.triples > 0, model.RDFDoc.format != 'sparql'))
         zip_temp_file = tempfile.NamedTemporaryFile(prefix='lodstatswww_voidzip')
         zip_temp = zipfile.ZipFile(zip_temp_file, 'w', zipfile.ZIP_DEFLATED)
         for r in rdfdocs:

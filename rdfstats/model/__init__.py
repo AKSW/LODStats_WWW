@@ -69,6 +69,9 @@ class RDFDoc(Base, _BaseMixin):
                         use_alter=True, name='fk_rdfdoc_current_stats_id'))
     file_last_modified = schema.Column(types.DateTime())
     in_datahub = schema.Column(types.Boolean)
+    ckan_catalog = schema.Column(types.Text(), schema.ForeignKey('ckan_catalog.name', 
+                        use_alter=True, name='rdfdoc_ckan_catalog_fkey'))
+    active = schema.Column(types.Boolean, default=True)
 
     def reset_current_stats_and_worker(self):
         if self.current_stats is not None:
@@ -206,6 +209,11 @@ class PropertyLabeled(Base, _BaseMixin):
     count = schema.Column(types.Integer)
     rdf_property_id = schema.Column(types.Integer)
     label_en_index_col = schema.Column(postgresql.TSVECTOR)
+
+class CkanCatalog(Base, _BaseMixin):
+    __tablename__ = 'ckan_catalog'
+    name = schema.Column(types.Text(), primary_key=True)
+    api_url = schema.Column(types.Text())
 
 # formalchemy
 RDFDoc_fa = FieldSet(RDFDoc)

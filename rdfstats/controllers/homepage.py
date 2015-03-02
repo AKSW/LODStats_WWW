@@ -32,19 +32,19 @@ log = logging.getLogger(__name__)
 class HomepageController(BaseController):
 
     def home(self):
-        c.rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).order_by(model.RDFDoc.worked_on.desc(), model.RDFDoc.name, model.RDFDoc.last_updated.desc(), ).all()
+        c.rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).order_by(model.RDFDoc.worked_on.desc(), model.RDFDoc.name, model.RDFDoc.last_updated.desc(), ).all()
         c.rdfdoc_count = len(c.rdfdocs)
         c.workers = Session.query(model.WorkerProc).order_by(model.WorkerProc.started.desc()).all()
-        c.no_of_rdfdocs_with_triples = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(model.StatResult.triples > 0).count()
-        c.sparql_packages = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(model.RDFDoc.format == "sparql").count()
-        c.dump_packages = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(model.RDFDoc.format != "sparql").count()
-        c.error_packages_dump = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(
+        c.no_of_rdfdocs_with_triples = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(model.StatResult.triples > 0).count()
+        c.sparql_packages = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(model.RDFDoc.format == "sparql").count()
+        c.dump_packages = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(model.RDFDoc.format != "sparql").count()
+        c.error_packages_dump = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(
                 and_(
                     model.StatResult.errors != None,
                     model.RDFDoc.format != 'sparql',
                     model.RDFDoc.format != None
                 )).count()
-        c.error_packages_sparql = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(
+        c.error_packages_sparql = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(
                 and_(
                     model.StatResult.errors != None,
                     model.RDFDoc.format == 'sparql',
@@ -59,7 +59,7 @@ class HomepageController(BaseController):
         if c.triples_sparql is None:
             c.triples_sparql = 0
         # most recent successful updates
-        c.recent_updates = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(
+        c.recent_updates = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(
                 and_(
                     model.StatResult.last_updated!=None,
                     model.StatResult.errors==None,
@@ -67,7 +67,7 @@ class HomepageController(BaseController):
                 )
                 ).order_by(desc(model.RDFDoc.last_updated))[:5]
         # most recent updates with errors
-        c.recent_updates_errors = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(
+        c.recent_updates_errors = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(
                 and_(
                     model.StatResult.last_updated!=None,
                     model.StatResult.errors!=None,
@@ -78,19 +78,19 @@ class HomepageController(BaseController):
 
     @beaker_cache(expire=86400, type='file')
     def stats(self):
-        c.rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).order_by(model.RDFDoc.worked_on.desc(), model.RDFDoc.name, model.RDFDoc.last_updated.desc(), ).all()
+        c.rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).order_by(model.RDFDoc.worked_on.desc(), model.RDFDoc.name, model.RDFDoc.last_updated.desc(), ).all()
         c.rdfdoc_count = len(c.rdfdocs)
         c.workers = Session.query(model.WorkerProc).order_by(model.WorkerProc.started.desc()).all()
-        c.no_of_rdfdocs_with_triples = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(model.StatResult.triples > 0).count()
-        c.sparql_packages = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(model.RDFDoc.format == "sparql").count()
-        c.dump_packages = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(model.RDFDoc.format != "sparql").count()
-        c.error_packages_dump = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(
+        c.no_of_rdfdocs_with_triples = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(model.StatResult.triples > 0).count()
+        c.sparql_packages = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(model.RDFDoc.format == "sparql").count()
+        c.dump_packages = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(model.RDFDoc.format != "sparql").count()
+        c.error_packages_dump = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(
                 and_(
                     model.StatResult.errors != None,
                     model.RDFDoc.format != 'sparql',
                     model.RDFDoc.format != None
                 )).count()
-        c.error_packages_sparql = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).join(model.RDFDoc.current_stats).filter(
+        c.error_packages_sparql = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).join(model.RDFDoc.current_stats).filter(
                 and_(
                     model.StatResult.errors != None,
                     model.RDFDoc.format == 'sparql',

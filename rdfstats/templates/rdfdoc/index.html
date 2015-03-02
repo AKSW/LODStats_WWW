@@ -28,7 +28,8 @@ ${c.rdfdocs_page.pager()}
   ${h.th_sortable(c.sort_order, "format", "Format", c.query_string+"sort=format", class_if_not_sort_column='nosortheader')}
   ${h.th_sortable(c.sort_order, "issue", "Issue", c.query_string+"sort=issue", class_if_not_sort_column='nosortheader')}
   ${h.th_sortable(c.sort_order, "update", "Last Update", c.query_string+"sort=update", class_if_not_sort_column='nosortheader')}
-  ##<th>Triples</th><th>Warnings</th><th>Format</th><th>Issue</th><th>Last Update</th>
+  ${h.th_sortable(c.sort_order, "ckan_catalog", "Ckan Catalog", c.query_string+"sort=ckan_catalog", class_if_not_sort_column='nosortheader')}
+  ##<th>Triples</th><th>Warnings</th><th>Format</th><th>Issue</th><th>Last Update</th><th>Ckan Catalog</th>
 % for rdfdoc in c.rdfdocs_page:
   % if rdfdoc.format == "sparql" and rdfdoc.current_stats and rdfdoc.current_stats.errors:
   <tr class="rdfdocsparqlerror" border="1">
@@ -85,6 +86,9 @@ ${c.rdfdocs_page.pager()}
     % if rdfdoc.current_stats and rdfdoc.last_updated:
       ${h.distance_of_time_in_words(rdfdoc.last_updated, granularity='hour')} ago
     % endif
+    </td>
+    <td class="ckancatalog">
+    ${rdfdoc.ckan_catalog}
     </td>
   </tr>
 % endfor

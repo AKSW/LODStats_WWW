@@ -44,8 +44,6 @@ class SynchronizeCkan(LodstatsListener):
     parser = Command.standard_parser(verbose=False)
     
     def command(self):
-        #print self._get_dataset(317)
-        #self.process_dataset(108)
         ckanCatalogPath = "/tmp/ckan_catalogs.pickled"
         f = open(ckanCatalogPath, 'rU')
         ckanCatalogs = pickle.load(f)
@@ -55,7 +53,7 @@ class SynchronizeCkan(LodstatsListener):
             ckanApiUrl = catalog['ckanApiUrl'] #http://catalog.data.gov/api
             packages = catalog['rdfpackages']
             for package in packages:
-                name = package['name'] #name is a part of URI http://catalog.data.gov/dataset/name
+                rdfPackageName = package['name'] #name is a part of URI http://catalog.data.gov/dataset/name
                 #just pickup first resource which is not None
                 rdfResource = None
                 for resource in package['resources']:
@@ -65,8 +63,16 @@ class SynchronizeCkan(LodstatsListener):
                 rdfResourceUrl = rdfResource['url']
                 rdfResourceFormat = rdfResource['format']
 
-                #Query rdfdoc for the name == name and prefix == ckan_catalog
-                #if exists -- skip
-                #if not -- normalize format to one of the supported
-        import ipdb; ipdb.set_trace()
-        
+                rdfdoc = Session.query(model.RDFDoc).filter(model.RDFDoc.name==rdfPackageName).first()
+                if(rdfdoc):
+                    continue
+                else:
+                    newRdfdoc = model.RDFDoc(name=rdfPackageName, uri=rdfResourceUrl, format=rdfResourceFormat, ckan_catalog=prefix)
+                    Session.add(newRdfdoc)
+                    Session.commit()
+
+    def normalizeFormat(self):
+        #accepted formats:
+        #ttl, n3, nt, nq, rdf, sparql, sitemap
+
+        pass
