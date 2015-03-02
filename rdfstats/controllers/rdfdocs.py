@@ -130,7 +130,12 @@ class RdfdocsController(BaseController):
                                         model.StatResult.rdfdoc==c.rdfdoc,
                                         model.StatResult.current_of==None)
                                     ).order_by(desc(model.StatResult.last_updated)).all()
-        c.ckan_base = config['ckan.base']
+        if(c.rdfdoc.ckan_catalog=="datahubio"):
+            c.ckan_base = config['ckan.base']
+        elif(c.rdfdoc.ckan_catalog=="datagov"):
+            c.ckan_base = "http://catalog.data.gov/"
+        elif(c.rdfdoc.ckan_catalog=="pdeu"):
+            c.ckan_base = "http://publicdata.eu/"
         if format=='json' or 'application/json' in request.headers.get('accept', ''):
             response.content_type = 'application/json'
             json_rdfdoc = {}
