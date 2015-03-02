@@ -47,7 +47,7 @@ class ProcessById(Command):
         message_broker.declareDirectExchange(exchange)
         message_broker.declareQueue(queue)
         message_broker.bindExchangeToQueue(exchange, queue)
-        rdfdoc = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True, model.RDFDoc.id==id).one()
+        rdfdoc = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True, model.RDFDoc.id==id).one()
         dataset = {
                 'id': rdfdoc.id,
                 }

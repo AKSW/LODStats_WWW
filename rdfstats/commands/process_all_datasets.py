@@ -46,7 +46,7 @@ class ProcessAllDatasets(Command):
         message_broker.declareDirectExchange(exchange)
         message_broker.declareQueue(queue)
         message_broker.bindExchangeToQueue(exchange, queue)
-        rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.in_datahub==True).all()
+        rdfdocs = Session.query(model.RDFDoc).filter(model.RDFDoc.active==True).all()
         for rdfdoc in rdfdocs:
             dataset = {
                     'id': rdfdoc.id,
