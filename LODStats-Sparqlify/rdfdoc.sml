@@ -21,7 +21,8 @@ Create View RdfDoc As
       void:feature ?rdfdocFormatUri;
       dcat:mediaType ?rdfdocFormatLiteral;
       ls-ontology:lastUpdated ?lastUpdated;
-      ls-ontology:currentStats ?rdfdocCurrentStats.
+      ls-ontology:currentStats ?rdfdocCurrentStats;
+      ls-ontology:active ?active.
   }
   With
     ?rdfdocUri = uri(ls-rdfdocs:, ?id)
@@ -33,18 +34,19 @@ Create View RdfDoc As
 
     ?lastUpdated = TypedLiteral(?last_updated, xsd:dateTime)
     ?rdfdocCurrentStats = uri(ls-statresult:, ?current_stats_id)
+    ?active = TypedLiteral(?active, xsd:boolean)
 
   From
-    [[SELECT rdfdoc.id, 
-             rdfdoc.uri, 
+    [[SELECT id, 
+             uri, 
              rdfdoc.name, 
-             rdfdoc.format, 
-             rdfdoc.last_updated, 
-             rdfdoc.current_stats_id, 
-             rdfdoc.ckan,
-             ckan_catalog.name,
-             ckan_catalog.api_url,
-             ckan_catalog.base
+             format, 
+             last_updated, 
+             current_stats_id, 
+             rdfdoc.ckan_catalog,
+             active,
+             api_url,
+             base
       FROM rdfdoc
       JOIN ckan_catalog
       ON rdfdoc.ckan_catalog=ckan_catalog.name]]
