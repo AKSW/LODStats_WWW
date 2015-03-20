@@ -1,7 +1,9 @@
 #!/bin/bash
 
 #BACKIN UP TO DROPBOX
-BACKUPDIR=/PATHTO/Dropbox/Public/lodstats-dumps
+BACKUPDIR=/PATHTO/lodstats-dumps
 NOW=$(date +"%m-%d-%Y")
 BACKUPFILE="$BACKUPDIR/$NOW.dump"
 sudo -u postgres pg_dump -Fc lodstats > $BACKUPFILE
+#https://github.com/andreafabrizi/Dropbox-Uploader -- install, run (setup) and link to /sbin/
+dropbox_uploader.sh upload $BACKUPFILE / 
