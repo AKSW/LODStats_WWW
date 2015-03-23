@@ -17,7 +17,7 @@ Create View RdfDoc As
   Construct {
     ?statresultUri
       foaf:primaryTopic ?rdfdocUri;
-      void:inDataset ?voidDataset;
+      void:inDataset ?statresultVoidUri;
       ls-ontology:triples ?triples;
       ls-ontology:lastUpdated ?last_updated;
       ls-ontology:errors ?errors;
@@ -43,7 +43,7 @@ Create View RdfDoc As
   }
   With
     ?statresultUri = uri(ls-statresult:, ?id)
-    ?voidDataset = uri(?uri)
+    ?statresultVoidUri = uri(concat(ls-statresult:, ?id, '.void'))
     ?rdfdocUri = uri(ls-rdfdocs:, ?rdfdoc_id)
     ?triples = PlainLiteral(?triples)
     ?last_updated = PlainLiteral(?last_updated)
