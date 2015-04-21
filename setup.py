@@ -41,5 +41,6 @@ setup(
     debug = rdfstats.commands.debugger:Debugger
     lodstats_update = rdfstats.commands.lodstats_update:LodstatsUpdate
     lodstats_sync = rdfstats.commands.synchronize_ckan:SynchronizeCkan
+    export_rdf = rdfstats.commands.export_rdf:ExportRdf
     """,
 )
