@@ -18,15 +18,17 @@ Create View RdfDoc As
     ?statresultUri
       foaf:primaryTopic ?rdfdocUri;
       void:inDataset ?statresultVoidUri;
-      ls-ontology:triples ?triples;
-      ls-ontology:lastUpdated ?last_updated;
+      dcterms:modified ?statresultLastUpdated;
+      dcat:byteSize ?statresultBytesDownload;
+      
+      ls-ontology:hasErrors ?hasErrors;
       ls-ontology:errors ?errors;
-      ls-ontology:warnings ?warnings;
-      ls-ontology:lastWarning ?last_warning;
-      ls-ontology:bytes ?bytes;
-      ls-ontology:bytesDownloaded ?bytes_download;
-      ls-ontology:contentLength ?content_length;
-      ls-ontology:entities ?entities;
+      ls-ontology:warningsCount ?warningsCount;
+      ls-ontology:lastWarning ?lastWarning;
+
+      void:triples ?triples;
+      void:entities ?entities;
+
       ls-ontology:literals ?literals;
       ls-ontology:blanks ?blanks;
       ls-ontology:blanks_as_subject ?blanks_as_subject;
@@ -39,33 +41,34 @@ Create View RdfDoc As
       ls-ontology:stringLengthTyped ?string_length_typed;
       ls-ontology:stringLengthUntyped ?string_length_untyped;
       ls-ontology:links ?links .
-
   }
   With
     ?statresultUri = uri(ls-statresult:, ?id)
-    ?statresultVoidUri = uri(concat(ls-statresult:, ?id, '.void'))
     ?rdfdocUri = uri(ls-rdfdocs:, ?rdfdoc_id)
-    ?triples = PlainLiteral(?triples)
-    ?last_updated = PlainLiteral(?last_updated)
-    ?errors = PlainLiteral(?errors)
-    ?warnings = PlainLiteral(?warnings)
-    ?last_warning = PlainLiteral(?last_warning)
-    ?bytes = PlainLiteral(?bytes)
-    ?bytes_download = PlainLiteral(?bytes_download)
-    ?content_length = PlainLiteral(?content_length)
-    ?entities = PlainLiteral(?entities)
-    ?literals = PlainLiteral(?literals)
-    ?blanks = PlainLiteral(?blanks)
-    ?blanks_as_subject = PlainLiteral(?blanks_as_subject)
-    ?blanks_as_object = PlainLiteral(?blanks_as_object)
-    ?subclasses = PlainLiteral(?subclasses)
-    ?typed_subjects = PlainLiteral(?typed_subjects)
-    ?labeled_subjects = PlainLiteral(?labeled_subjects)
-    ?class_hierarchy_depth = PlainLiteral(?class_hierarchy_depth)
-    ?properties_per_entity = PlainLiteral(?properties_per_entity)
-    ?string_length_typed = PlainLiteral(?string_length_typed)
-    ?string_length_untyped = PlainLiteral(?string_length_untyped)
-    ?links = PlainLiteral(?links)
+    ?statresultVoidUri = uri(concat(ls-statresult:, ?id, '.void'))
+    ?statresultLastUpdated = TypedLiteral(?last_updated, xsd:dateTime)
+    ?statresultBytesDownload = TypedLiteral(?bytes_download, xsd:int)
+
+    ?hasErrors = TypedLiteral(?has_errors, xsd:boolean)
+    ?errors = TypedLiteral(?errors, xsd:string)
+    ?warningsCount = TypedLiteral(?warnings, xsd:int)
+    ?lastWarning = TypedLiteral(?last_warning, xsd:string)
+
+    ?triples = TypedLiteral(?triples, xsd:int)
+    ?entities = TypedLiteral(?entities, xsd:int)
+
+    ?literals = TypedLiteral(?literals, xsd:int)
+    ?blanks = TypedLiteral(?blanks, xsd:int)
+    ?blanks_as_subject = TypedLiteral(?blanks_as_subject, xsd:int)
+    ?blanks_as_object = TypedLiteral(?blanks_as_object, xsd:int)
+    ?subclasses = TypedLiteral(?subclasses, xsd:int)
+    ?typed_subjects = TypedLiteral(?typed_subjects, xsd:int)
+    ?labeled_subjects = TypedLiteral(?labeled_subjects, xsd:int)
+    ?class_hierarchy_depth = TypedLiteral(?class_hierarchy_depth, xsd:int)
+    ?properties_per_entity = TypedLiteral(?properties_per_entity, xsd:float)
+    ?string_length_typed = TypedLiteral(?string_length_typed, xsd:float)
+    ?string_length_untyped = TypedLiteral(?string_length_untyped, xsd:float)
+    ?links = TypedLiteral(?links, xsd:int)
 
   From
     [[SELECT stat_result.id, 
@@ -98,6 +101,7 @@ Create View RdfDoc As
       FROM stat_result
       JOIN rdfdoc
       ON stat_result.rdfdoc_id=rdfdoc.id
+      LIMIT 100
       ]]
 
 
