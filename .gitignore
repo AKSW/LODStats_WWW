@@ -27,3 +27,4 @@ rdfstats.egg-info/*
 pyenv/
 backup-scripts/backup.sh
 backup-scripts/restore.sh
+LODStats-Sparqlify/void

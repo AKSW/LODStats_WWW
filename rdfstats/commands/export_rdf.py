@@ -46,22 +46,28 @@ class ExportRdf(LodstatsListener):
     parser = Command.standard_parser(verbose=False)
     
     def command(self):
+        print("Loading RDF database...")
         rdfStorage = RDF.FileStorage("lodstatsrdf")
         rdfModel = RDF.Model(rdfStorage)
+        print("Finished!")
 
         ckanCatalogPath = "/tmp/ckan_catalogs.pickled"
+        print("Reading " + ckanCatalogPath)
         f = open(ckanCatalogPath, 'rU')
         ckanCatalogs = pickle.load(f)
         f.close()
+        print("Finished!")
         #Fetch the all rdfdocs from the DB
+        print("Fetching the data from DB...")
         rdfdocs = Session.query(model.RDFDoc).all()
+        print("Fetched the data from DB!")
         overall = len(rdfdocs)
         for num, rdfdoc in enumerate(rdfdocs):
             print("Processing %d out of %d" % (num, overall))
             try:
                 self.generateRdfForRdfDoc(rdfdoc, rdfModel, ckanCatalogs)
             except BaseException as e:
-                print(str(e))
+                print("Oops, exception occured: "+str(e))
 
         serializer = RDF.Serializer(name="ntriples")
         serializer.serialize_model_to_file("lodstats.nt", rdfModel, base_uri=None)
