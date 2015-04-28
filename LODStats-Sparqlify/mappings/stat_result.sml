@@ -13,11 +13,12 @@ Prefix rdf-formats: <http://www.w3.org/ns/formats/>
 Prefix dcat: <http://www.w3.org/ns/dcat#>
 Prefix foaf: <http://xmlns.com/foaf/0.1/>
 
-Create View RdfDoc As
+Create View StatResult As
   Construct {
     ?statresultUri
+      a void:Dataset;
+      owl:sameAs ?statresultVoidUri;
       foaf:primaryTopic ?rdfdocUri;
-      void:inDataset ?statresultVoidUri;
       dcterms:modified ?statresultLastUpdated;
       dcat:byteSize ?statresultBytesDownload;
       
@@ -101,7 +102,6 @@ Create View RdfDoc As
       FROM stat_result
       JOIN rdfdoc
       ON stat_result.rdfdoc_id=rdfdoc.id
-      LIMIT 100
       ]]
 
 
