@@ -16,25 +16,25 @@ Create View RdfDoc As
   Construct {
     ?rdfdocUri
       a dcat:Dataset;
-      dcat:accessURL ?rdfdocCatalogUri;
-      dcterms:source ?rdfdocSrc;
-      void:feature ?rdfdocFormatUri;
-      dcat:mediaType ?rdfdocFormatLiteral;
-      ls-ontology:lastUpdated ?lastUpdated;
+      dcat:downloadURL ?rdfdocDownloadUri;
+      dcterms:identifier ?rdfdocIdLiteral;
+      dcterms:format ?rdfdocFormatLiteral;
+      dcterms:modified ?lastUpdated;
       ls-ontology:currentStats ?rdfdocCurrentStats;
-      ls-ontology:active ?active.
+      owl:sameAs ?rdfdocCatalogUri;
+      ls-ontology:active ?active;
+      dcterms:isPartOf ?ckanUri.
   }
   With
     ?rdfdocUri = uri(ls-rdfdocs:, ?id)
-    ?rdfdocSrc = uri(?uri)
-    ?rdfdocCatalogUri = uri(concat(?base, 'dataset/', ?name))
-
-    ?rdfdocFormatUri = uri(rdf-formats:, ?format)
+    ?rdfdocDownloadUri = uri(?uri)
+    ?rdfdocIdLiteral = TypedLiteral(?name, xsd:string)
     ?rdfdocFormatLiteral = TypedLiteral(?format, xsd:string)
-
     ?lastUpdated = TypedLiteral(?last_updated, xsd:dateTime)
     ?rdfdocCurrentStats = uri(ls-statresult:, ?current_stats_id)
+    ?rdfdocCatalogUri = uri(concat(?base, 'dataset/', ?name))
     ?active = TypedLiteral(?active, xsd:boolean)
+    ?ckanUri = uri(?base)
 
   From
     [[SELECT id, 
