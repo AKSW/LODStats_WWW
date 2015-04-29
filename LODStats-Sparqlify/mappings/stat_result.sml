@@ -16,7 +16,8 @@ Prefix foaf: <http://xmlns.com/foaf/0.1/>
 Create View StatResult As
   Construct {
     ?statresultUri
-      a void:Dataset;
+      a ls-ontology:StatResult;
+      rdfs:subClassOf void:Dataset;
       owl:sameAs ?statresultVoidUri;
       foaf:primaryTopic ?rdfdocUri;
       dcterms:modified ?statresultLastUpdated;
@@ -32,8 +33,8 @@ Create View StatResult As
 
       ls-ontology:literals ?literals;
       ls-ontology:blanks ?blanks;
-      ls-ontology:blanks_as_subject ?blanks_as_subject;
-      ls-ontology:blanks_as_object ?blanks_as_object;
+      ls-ontology:blanksAsSubject ?blanks_as_subject;
+      ls-ontology:blanksAsObject ?blanks_as_object;
       ls-ontology:subclasses ?subclasses;
       ls-ontology:typedSubjects ?typed_subjects;
       ls-ontology:labeledSubjects ?labeled_subjects;

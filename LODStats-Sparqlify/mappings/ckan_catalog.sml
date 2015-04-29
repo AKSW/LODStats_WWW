@@ -17,7 +17,8 @@ Prefix api: <http://purl.org/linked-data/api/vocab#>
 Create View CkanCatalog As
   Construct {
     ?ckanCatalogUri
-      a dcat:Catalog;
+      a ls-ontology:CkanCatalog;
+      rdfs:subClassOf dcat:Catalog;
       dcterms:identifier ?nameLiteral;
       api:base ?apiUrl;
       foaf:homepage ?ckanCatalogUri.

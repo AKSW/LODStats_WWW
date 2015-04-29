@@ -15,14 +15,15 @@ Prefix dcat: <http://www.w3.org/ns/dcat#>
 Create View RdfDoc As
   Construct {
     ?rdfdocUri
-      a dcat:Dataset;
+      a ls-ontology:Dataset;
+      rdfs:subClassOf dcat:Dataset;
       dcat:downloadURL ?rdfdocDownloadUri;
       dcterms:identifier ?rdfdocIdLiteral;
       dcterms:format ?rdfdocFormatLiteral;
       dcterms:modified ?lastUpdated;
+      ls-ontology:active ?active;
       ls-ontology:currentStats ?rdfdocCurrentStats;
       owl:sameAs ?rdfdocCatalogUri;
-      ls-ontology:active ?active;
       dcterms:isPartOf ?ckanUri.
   }
   With
