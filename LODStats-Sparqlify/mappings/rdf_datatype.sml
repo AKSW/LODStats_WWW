@@ -6,7 +6,7 @@ Prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 Prefix ls: <http://lodstats.aksw.org/>
 Prefix ls-rdfdocs: <http://lodstats.aksw.org/rdfdocs/>
 Prefix ls-statresult: <http://lodstats.aksw.org/stat_result/>
-Prefix ls-ontology: <http://lodstats.aksw.org/ontology/>
+Prefix ls-ontology: <http://lodstats.aksw.org/ontology/ldso.owl#>
 Prefix dcterms: <http://purl.org/dc/terms/>
 Prefix void: <http://rdfs.org/ns/void#>
 Prefix rdf-formats: <http://www.w3.org/ns/formats/>
