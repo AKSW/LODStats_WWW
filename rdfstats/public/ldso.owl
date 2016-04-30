@@ -1,0 +1,250 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix ldso: <http://lodstats.aksw.org/ontology/ldso.owl#> .
+
+###########
+# Classes #
+###########
+
+ldso:Dataset a rdfs:Class ;
+    rdfs:subClassOf dcat:Dataset ;
+    rdfs:label "Dataset" ;
+    rdfs:comment "Represents a CKAN dataset entry." .
+
+ldso:StatResult a rdfs:Class ;
+    rdfs:subClassOf void:Dataset ;
+    rdfs:label "Evaluation Result" ;
+    rdfs:comment "Represents a result of metrics evaluation performed by LODStats application." .
+
+ldso:CkanCatalog a rdfs:Class ;
+    rdfs:subClassOf dcat:Catalog ;
+    rdfs:label "Ckan catalog";
+    rdfs:comment "Represents a CKAN data catalog.".
+
+################
+# Restrictions #
+################
+
+ldso:Dataset 
+  owl:equivalentClass 
+    [
+      a owl:Restriction;
+      owl:onProperty ldso:currentStats;
+      owl:someValuesFrom ldso:StatResult
+    ] ;
+  owl:equivalentClass
+    [
+      a owl:Restriction;
+      owl:onProperty ldso:currentStats;
+      owl:cardinality "1"^^xsd:int
+    ] ;
+  owl:equivalentClass
+    [
+      a owl:Restriction;
+      owl:onProperty dc:isPartOf;
+      owl:someValuesFrom ldso:CkanCatalog
+    ] ;
+  owl:equivalentClass
+    [
+      a owl:Restriction;
+      owl:onProperty dc:isPartOf;
+      owl:cardinality "1"^^xsd:int
+    ] .
+
+ldso:StatResult
+  owl:equivalentClass
+    [
+      a owl:Restriction;
+      owl:onProperty foaf:primaryTopic;
+      owl:someValuesFrom ldso:Dataset
+    ] ;
+  owl:equivalentClass
+    [
+      a owl:Restriction;
+      owl:onProperty foaf:primaryTopic;
+      owl:cardinality "1"^^xsd:int
+    ] .
+
+##############
+# Properties #
+##############
+
+ldso:active a rdf:Property,
+              owl:DatatypeProperty ;
+    rdfs:label "Is active CKAN?";
+    rdfs:comment "Shows if a dataset is up-to-date and exists in a CKAN data catalog (or not).";
+    rdfs:domain ldso:Dataset;
+    rdfs:range xsd:boolean.
+
+ldso:currentStats a rdf:Property,
+                    owl:ObjectProperty ;
+    rdfs:label "Current evaluation result";
+    rdfs:comment "Links a dataset to the latest evaluation result.";
+    rdfs:domain ldso:Dataset;
+    rdfs:range ldso:StatResult.
+
+ldso:hasErrors a rdf:Property,
+                 owl:DatatypeProperty;
+    rdfs:label "Has errors?";
+    rdfs:comment "Shows if datasets parsing encountered any errors.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:boolean.
+
+ldso:errors a rdf:Property,
+              owl:DatatypeProperty;
+    rdfs:label "Errors";
+    rdfs:comment "Shows errors as a plain text string.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:string.
+
+ldso:warningsCount a rdf:Property,
+                     owl:DatatypeProperty;
+    rdfs:label "Warnings count";
+    rdfs:comment "Shows the number of warnings during RDF parsing.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:int.
+
+ldso:lastWarning a rdf:Property,
+                   owl:DatatypeProperty;
+    rdfs:label "Last warning";
+    rdfs:comment "Shows the last warning as a plain text string.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:string.
+
+ldso:literals a rdf:Property,
+                owl:DatatypeProperty ;
+    rdfs:label "Number of literals";
+    rdfs:comment "Shows number of literals in a dataset.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:int.
+
+ldso:blanks a rdf:Property,
+              owl:DatatypeProperty ;
+    rdfs:label "Number of blank nodes";
+    rdfs:comment "Shows number of blank nodes in a dataset.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:int.
+
+ldso:blanksAsSubject a rdf:Property,
+                       owl:DatatypeProperty ;
+    rdfs:label "Number of blank nodes as subject";
+    rdfs:comment "Shows number of blank nodes as subject in a dataset.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:int.
+
+ldso:blanksAsObject a rdf:Property,
+                      owl:DatatypeProperty ;
+    rdfs:label "Number of blank nodes as object";
+    rdfs:comment "Shows number of blank nodes as object in a dataset.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:int.
+
+ldso:subclasses a rdf:Property, 
+                  owl:DatatypeProperty ;
+    rdfs:label "Number of subclasses.";
+    rdfs:comment "Shows number of subclasses in a dataset.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:int.
+
+ldso:typedSubjects a rdf:Property,
+                     owl:DatatypeProperty ;
+    rdfs:label "Number of typed subjects";
+    rdfs:comment "Shows number of typed subjects in a dataset.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:int.
+
+ldso:labeledSubjects a rdf:Property,
+                       owl:DatatypeProperty ;
+    rdfs:label "Number of labeled subjects";
+    rdfs:comment "Shows number of labeled subjects in a dataset.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:int.
+
+ldso:classHierarchyDepth a rdf:Property,
+                           owl:DatatypeProperty ;
+    rdfs:label "Class hierarchy depth";
+    rdfs:comment "Shows class hierarchy depth for a dataset.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:int.
+
+ldso:propertiesPerEntity a rdf:Property,
+                           owl:DatatypeProperty ;
+    rdfs:label "Properties per entity";
+    rdfs:comment "Shows how many properties per entity a dataset contains.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:float.
+
+ldso:stringLengthTyped a rdf:Property,
+                         owl:DatatypeProperty ;
+    rdfs:label "String length typed";
+    rdfs:comment "Shows average string length of typed objects for a dataset. Average length of typed literals.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:float.
+
+ldso:stringLengthUntyped a rdf:Property,
+                           owl:DatatypeProperty ;
+    rdfs:label "String length untyped";
+    rdfs:comment "Shows average string length of untyped objects for a dataset. Average length of untyped literals.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:float.
+
+ldso:links a rdf:Property,
+             owl:DatatypeProperty ;
+    rdfs:label "Number of links";
+    rdfs:comment "Shows number of links for a dataset.";
+    rdfs:domain ldso:StatResult;
+    rdfs:range xsd:int.
+
+ldso:datatypePartition a rdf:Property,
+                         owl:ObjectProperty ;
+    rdfs:subPropertyOf void:subset ;
+    rdfs:label "Datatype partition" ;
+    rdfs:comment "Datatype partition divides a dataset into subsets based on datatypes. The partition contains all the triples that uses the same datatype.";
+    rdfs:domain ldso:StatResult.
+
+ldso:datatype a rdf:Property,
+                owl:DatatypeProperty ;
+    rdfs:label "Datatype";
+    rdfs:comment "Indicates a datatype used for a datatype partition.".
+
+ldso:vocabularyPartition a rdf:Property,
+                           owl:ObjectProperty ;
+    rdfs:label "Vocabulary partition";
+    rdfs:comment "Vocabulary partition divides a dataset into subsets based on vocabularies. The partition contains all the triples that uses the same vocabulary.";
+    rdfs:domain ldso:StatResult.
+
+ldso:vocabulary a rdf:Property,
+                  owl:DatatypeProperty ;
+    rdfs:label "Vocabulary";
+    rdfs:comment "Indicates a vocabulary used for a vocabulary partition.".
+
+ldso:languagePartition a rdf:Property,
+                         owl:ObjectProperty ;
+    rdfs:label "Language partition";
+    rdfs:comment "Language partition divides a dataset into subsets based on languages. The partition contains all the triples that uses the same language.";
+    rdfs:domain ldso:StatResult.
+
+ldso:language a rdf:Property,
+                owl:DatatypeProperty ;
+    rdfs:label "Language";
+    rdfs:comment "Indicates a language used for a language partition.".
+
+#####################
+# Reused properties #
+#####################
+
+dc:isPartOf a rdf:Property,
+              owl:ObjectProperty;
+    rdfs:domain ldso:Dataset;
+    rdfs:range ldso:CkanCatalog.
+
+foaf:primaryTopic a rdf:Property,
+                    owl:ObjectProperty;
+    rdfs:domain ldso:StatResult;
+    rdfs:range ldso:Dataset.
