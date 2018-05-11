@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:10.3
+    environment:
+      POSTGRES_USER: "lodstats"
+      POSTGRES_PASSWORD: "lodstats"
+      POSTGRES_DB: "lodstats"
+    ports:
+      - 5432:5432
+
+

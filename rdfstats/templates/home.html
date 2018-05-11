@@ -22,14 +22,12 @@
 <h2>Most recently updated</h2>
 <ul>
 % for rdfdoc in c.recent_updates:
-  <li>${h.link_to(rdfdoc.name, url('rdfdoc', id=rdfdoc.id))},
-  ${h.distance_of_time_in_words(rdfdoc.last_updated, granularity='hour')} ago</li>
+  <li>${h.link_to(rdfdoc.name, url('rdfdoc', id=rdfdoc.id))}</li>
 % endfor
 </ul>
 <h2>Most recent updates with errors</h2>
 <ul>
 % for rdfdoc in c.recent_updates_errors:
-  <li>${h.link_to(rdfdoc.name, url('rdfdoc', id=rdfdoc.id))},
-  ${h.distance_of_time_in_words(rdfdoc.last_updated, granularity='hour')} ago</li>
+  <li>${h.link_to(rdfdoc.name, url('rdfdoc', id=rdfdoc.id))}</li>
 % endfor
 </ul>

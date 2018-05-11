@@ -35,7 +35,7 @@ form#rdfdocsnavearchform input[type="submit"]:hover { cursor: pointer; box-shado
 /*clear*/
 .clear { clear:both; }
 #linklogos { position: absolute; top: 20px; right:20px; z-index: 1; }
-.linklogo { position: relative; height:36px; }
+.linklogo { position: relative; height:50px; }
 /*text*/
 #lodstatslogo { position: absolute; top: 20px; left:20px; height: 80px; z-index: 1; }
 #lodstatslogotext { font-size: 36px; color: #fff; display: inline;}
